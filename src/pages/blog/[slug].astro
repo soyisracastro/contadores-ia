@@ -1,0 +1,240 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntry } from 'astro:content';
+import { canAccessPremiumContent } from '../../lib/auth';
+
+// Obtener el slug de la URL
+const { slug } = Astro.params;
+
+// Obtener el post
+const post = await getEntry('blog', slug || '');
+
+// Si no existe el post, redirigir al blog
+if (!post) {
+  return Astro.redirect('/blog');
+}
+
+const { Content } = await post.render();
+
+// Verificar acceso a contenido premium
+const accessResult = await canAccessPremiumContent(Astro.cookies);
+
+// Determinar si mostrar contenido o mensaje de bloqueo
+const canAccess = !post.data.premium || accessResult.hasAccess;
+const needsAuth = post.data.premium && !canAccess;
+
+const formattedDate = new Intl.DateTimeFormat('es-MX', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).format(post.data.pubDate);
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header del artículo -->
+    <header class="mb-8">
+      <div class="flex items-center gap-2 mb-4">
+        {post.data.premium && (
+          <span class="bg-yellow-100 text-yellow-800 text-sm font-semibold px-3 py-1 rounded">
+            Contenido Premium
+          </span>
+        )}
+        <time class="text-gray-500">{formattedDate}</time>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        {post.data.title}
+      </h1>
+
+      <p class="text-xl text-gray-600 mb-6">
+        {post.data.description}
+      </p>
+
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-gray-500">Por {post.data.author}</span>
+        <span class="text-gray-300">•</span>
+        <div class="flex flex-wrap gap-2">
+          {post.data.tags.map((tag) => (
+            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenido o mensaje de acceso restringido -->
+    {needsAuth ? (
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
+        <svg class="w-16 h-16 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+          Contenido Premium
+        </h2>
+
+        {/* Mensaje personalizado según la razón del bloqueo */}
+        {accessResult.reason === 'not_authenticated' ? (
+          <>
+            <p class="text-gray-600 mb-6">
+              Este artículo es exclusivo para miembros. Inicia sesión para acceder.
+            </p>
+            <a
+              href="/login"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
+            >
+              Iniciar Sesión
+            </a>
+          </>
+        ) : accessResult.reason === 'no_membership' ? (
+          <>
+            <p class="text-gray-600 mb-6">
+              No tienes una membresía activa. Suscríbete para acceder a todo el contenido premium.
+            </p>
+            <a
+              href="/pricing"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
+            >
+              Ver Planes
+            </a>
+          </>
+        ) : accessResult.reason === 'expired' ? (
+          <>
+            <p class="text-gray-600 mb-2">
+              Tu membresía ha expirado.
+            </p>
+            {accessResult.membership?.end_date && (
+              <p class="text-sm text-gray-500 mb-6">
+                Venció el {new Date(accessResult.membership.end_date).toLocaleDateString('es-MX', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
+            )}
+            <a
+              href="/pricing"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
+            >
+              Renovar Membresía
+            </a>
+          </>
+        ) : accessResult.reason === 'cancelled' ? (
+          <>
+            <p class="text-gray-600 mb-6">
+              Tu membresía ha sido cancelada. Contacta a soporte si crees que esto es un error.
+            </p>
+            <a
+              href="/pricing"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
+            >
+              Ver Planes
+            </a>
+          </>
+        ) : (
+          <>
+            <p class="text-gray-600 mb-6">
+              Este contenido requiere una membresía activa.
+            </p>
+            <a
+              href="/login"
+              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
+            >
+              Iniciar Sesión
+            </a>
+          </>
+        )}
+      </div>
+    ) : (
+      <div class="prose prose-lg max-w-none">
+        <Content />
+      </div>
+    )}
+
+    <!-- Navegación -->
+    <div class="mt-12 pt-8 border-t border-gray-200">
+      <a
+        href="/blog"
+        class="text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center"
+      >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Volver al blog
+      </a>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  /* Estilos personalizados para el contenido Markdown */
+  .prose {
+    color: #374151;
+  }
+
+  .prose h1, .prose h2, .prose h3 {
+    color: #111827;
+    font-weight: 700;
+    margin-top: 2em;
+    margin-bottom: 1em;
+  }
+
+  .prose h2 {
+    font-size: 1.75em;
+  }
+
+  .prose h3 {
+    font-size: 1.5em;
+  }
+
+  .prose p {
+    margin-bottom: 1.5em;
+    line-height: 1.75;
+  }
+
+  .prose ul, .prose ol {
+    margin-bottom: 1.5em;
+    padding-left: 1.5em;
+  }
+
+  .prose li {
+    margin-bottom: 0.5em;
+  }
+
+  .prose code {
+    background-color: #f3f4f6;
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+  }
+
+  .prose pre {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 1.5em;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1.5em;
+  }
+
+  .prose pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+  }
+
+  .prose strong {
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .prose a {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+
+  .prose a:hover {
+    color: #1d4ed8;
+  }
+</style>
