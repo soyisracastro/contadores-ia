@@ -20,6 +20,13 @@ const user = await getUser(Astro.cookies);
           Blog
         </a>
 
+        {/* Link Taller - Solo visible para usuarios autenticados */}
+        {user && (
+          <a href="/taller" class="text-gray-700 hover:text-blue-600 transition font-semibold">
+            Taller
+          </a>
+        )}
+
         {user ? (
           <div class="flex items-center gap-4">
             <span class="text-sm text-gray-600">
