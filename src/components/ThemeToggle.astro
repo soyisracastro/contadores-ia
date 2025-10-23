@@ -1,0 +1,146 @@
+---
+// ThemeToggle - Toggle minimalista para cambiar entre dark/light mode
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  aria-label="Toggle theme"
+  class="theme-toggle-btn"
+>
+  <!-- Icono Sol (Light Mode) -->
+  <svg id="theme-toggle-light-icon" class="theme-icon hidden" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+  </svg>
+
+  <!-- Icono Luna (Dark Mode) -->
+  <svg id="theme-toggle-dark-icon" class="theme-icon hidden" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle-btn {
+    /* Posicionamiento y tamaño */
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.5rem;
+
+    /* Colores y bordes */
+    background-color: transparent;
+    border: 1px solid rgba(148, 0, 255, 0.2);
+    border-radius: 0.5rem;
+
+    /* Efectos */
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    /* Centrar icono */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .theme-toggle-btn:hover {
+    background-color: rgba(148, 0, 255, 0.1);
+    border-color: rgba(148, 0, 255, 0.5);
+    transform: scale(1.05);
+  }
+
+  .theme-toggle-btn:active {
+    transform: scale(0.95);
+  }
+
+  .theme-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--primary);
+    transition: transform 0.3s ease;
+  }
+
+  .theme-toggle-btn:hover .theme-icon {
+    transform: rotate(15deg);
+  }
+
+  /* Dark mode: glow effect */
+  :global(.dark) .theme-toggle-btn {
+    border-color: rgba(0, 255, 255, 0.3);
+  }
+
+  :global(.dark) .theme-toggle-btn:hover {
+    background-color: rgba(0, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.6);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+
+  :global(.dark) .theme-icon {
+    color: var(--secondary);
+  }
+</style>
+
+<script>
+  // Función para obtener el tema actual
+  function getTheme(): 'light' | 'dark' {
+    // 1. Verificar localStorage
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme') as 'light' | 'dark';
+    }
+
+    // 2. Verificar preferencia del sistema
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+
+    // 3. Default: light
+    return 'light';
+  }
+
+  // Función para aplicar el tema
+  function applyTheme(theme: 'light' | 'dark') {
+    const html = document.documentElement;
+    const lightIcon = document.getElementById('theme-toggle-light-icon');
+    const darkIcon = document.getElementById('theme-toggle-dark-icon');
+
+    if (theme === 'dark') {
+      html.classList.add('dark');
+      lightIcon?.classList.remove('hidden');
+      darkIcon?.classList.add('hidden');
+    } else {
+      html.classList.remove('dark');
+      lightIcon?.classList.add('hidden');
+      darkIcon?.classList.remove('hidden');
+    }
+
+    // Guardar en localStorage
+    localStorage.setItem('theme', theme);
+  }
+
+  // Función para toggle del tema
+  function toggleTheme() {
+    const currentTheme = getTheme();
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(newTheme);
+  }
+
+  // Aplicar tema inicial
+  applyTheme(getTheme());
+
+  // Event listener para el botón
+  document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+
+  // Listener para cambios en las preferencias del sistema
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Solo aplicar si no hay preferencia guardada en localStorage
+    if (!localStorage.getItem('theme')) {
+      applyTheme(e.matches ? 'dark' : 'light');
+    }
+  });
+
+  // Manejar navegación de Astro (View Transitions)
+  document.addEventListener('astro:page-load', () => {
+    applyTheme(getTheme());
+
+    // Re-attach event listener
+    document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+  });
+</script>

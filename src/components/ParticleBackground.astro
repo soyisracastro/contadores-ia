@@ -1,0 +1,214 @@
+---
+// ParticleBackground - Fondo de partículas interactivo con p5.js
+---
+
+<div id="particle-canvas-container"></div>
+
+<style>
+  #particle-canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  #particle-canvas-container canvas {
+    display: block;
+  }
+</style>
+
+<script>
+  import p5 from 'p5';
+
+  class Particle {
+    p5: any;
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    size: number;
+    connections: Particle[];
+    maxConnections: number;
+
+    constructor(p: any, x: number, y: number) {
+      this.p5 = p;
+      this.x = x;
+      this.y = y;
+      this.vx = p.random(-0.5, 0.5);
+      this.vy = p.random(-0.5, 0.5);
+      this.size = p.random(2, 4);
+      this.connections = [];
+      this.maxConnections = p.random(2, 5);
+    }
+
+    update(mouseX: number, mouseY: number, width: number, height: number) {
+      // Movimiento básico
+      this.x += this.vx;
+      this.y += this.vy;
+
+      // Rebote en bordes
+      if (this.x < 0 || this.x > width) this.vx *= -1;
+      if (this.y < 0 || this.y > height) this.vy *= -1;
+
+      // Mantener dentro de límites
+      this.x = this.p5.constrain(this.x, 0, width);
+      this.y = this.p5.constrain(this.y, 0, height);
+
+      // Repulsión al mouse
+      const dx = this.x - mouseX;
+      const dy = this.y - mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const repulsionRadius = 150;
+
+      if (dist < repulsionRadius && dist > 0) {
+        const force = (repulsionRadius - dist) / repulsionRadius;
+        const angle = Math.atan2(dy, dx);
+        this.vx += Math.cos(angle) * force * 0.5;
+        this.vy += Math.sin(angle) * force * 0.5;
+      }
+
+      // Limitar velocidad
+      const maxSpeed = 2;
+      const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+      if (speed > maxSpeed) {
+        this.vx = (this.vx / speed) * maxSpeed;
+        this.vy = (this.vy / speed) * maxSpeed;
+      }
+
+      // Fricción
+      this.vx *= 0.99;
+      this.vy *= 0.99;
+    }
+
+    draw(isDark: boolean) {
+      // Color según theme
+      if (isDark) {
+        // Cyan neón con glow en dark mode
+        this.p5.fill(0, 255, 255, 200);
+        this.p5.noStroke();
+
+        // Glow effect
+        this.p5.drawingContext.shadowBlur = 15;
+        this.p5.drawingContext.shadowColor = 'rgba(0, 255, 255, 0.8)';
+      } else {
+        // Violeta oscuro y opaco en light mode
+        this.p5.fill(148, 0, 255, 255);
+        this.p5.noStroke();
+
+        // Sombra sutil para destacar
+        this.p5.drawingContext.shadowBlur = 5;
+        this.p5.drawingContext.shadowColor = 'rgba(148, 0, 255, 0.6)';
+      }
+
+      this.p5.circle(this.x, this.y, this.size);
+      this.p5.drawingContext.shadowBlur = 0;
+    }
+
+    drawConnections(isDark: boolean) {
+      for (const other of this.connections) {
+        const dx = other.x - this.x;
+        const dy = other.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 150) {
+          const alpha = this.p5.map(dist, 0, 150, 120, 0);
+
+          if (isDark) {
+            // Líneas cyan en dark mode
+            this.p5.stroke(0, 255, 255, alpha);
+          } else {
+            // Líneas violeta más visibles en light mode
+            this.p5.stroke(148, 0, 255, alpha);
+          }
+
+          this.p5.strokeWeight(1.5);
+          this.p5.line(this.x, this.y, other.x, other.y);
+        }
+      }
+    }
+  }
+
+  function initParticles() {
+    const container = document.getElementById('particle-canvas-container');
+    if (!container) return;
+
+    const sketch = (p: any) => {
+      let particles: Particle[] = [];
+      let isDark = false;
+
+      p.setup = () => {
+        const canvas = p.createCanvas(container.offsetWidth, container.offsetHeight);
+        canvas.parent('particle-canvas-container');
+
+        // Crear partículas
+        const particleCount = Math.floor((p.width * p.height) / 15000);
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(
+            new Particle(p, p.random(p.width), p.random(p.height))
+          );
+        }
+
+        // Conectar partículas cercanas
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[j].x - particles[i].x;
+            const dy = particles[j].y - particles[i].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 150 &&
+                particles[i].connections.length < particles[i].maxConnections &&
+                particles[j].connections.length < particles[j].maxConnections) {
+              particles[i].connections.push(particles[j]);
+              particles[j].connections.push(particles[i]);
+            }
+          }
+        }
+
+        // Detectar theme inicial
+        isDark = document.documentElement.classList.contains('dark');
+      };
+
+      p.draw = () => {
+        // Detectar cambios de theme
+        isDark = document.documentElement.classList.contains('dark');
+
+        // Fondo transparente
+        p.clear();
+
+        // Actualizar y dibujar partículas
+        for (const particle of particles) {
+          particle.update(p.mouseX, p.mouseY, p.width, p.height);
+        }
+
+        // Dibujar conexiones primero
+        for (const particle of particles) {
+          particle.drawConnections(isDark);
+        }
+
+        // Dibujar partículas encima
+        for (const particle of particles) {
+          particle.draw(isDark);
+        }
+      };
+
+      p.windowResized = () => {
+        p.resizeCanvas(container.offsetWidth, container.offsetHeight);
+      };
+    };
+
+    new p5(sketch);
+  }
+
+  // Inicializar cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initParticles);
+  } else {
+    initParticles();
+  }
+
+  // Reinicializar en navegación de Astro
+  document.addEventListener('astro:page-load', initParticles);
+</script>

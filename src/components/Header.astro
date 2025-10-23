@@ -1,41 +1,42 @@
 ---
 import { getUser } from '../lib/auth';
+import ThemeToggle from './ThemeToggle.astro';
 const user = await getUser(Astro.cookies);
 ---
 
-<header class="bg-white shadow-sm">
+<header class="header-bg shadow-sm border-b border-cyber-border">
   <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16 items-center">
       <div class="flex items-center">
-        <a href="/" class="text-2xl font-bold text-blue-600">
+        <a href="/" class="logo-text">
           Contadores IA
         </a>
       </div>
 
       <div class="flex items-center gap-6">
-        <a href="/" class="text-gray-700 hover:text-blue-600 transition">
+        <a href="/" class="nav-link">
           Inicio
         </a>
-        <a href="/blog" class="text-gray-700 hover:text-blue-600 transition">
+        <a href="/blog" class="nav-link">
           Blog
         </a>
 
         {/* Link Taller - Solo visible para usuarios autenticados */}
         {user && (
-          <a href="/taller" class="text-gray-700 hover:text-blue-600 transition font-semibold">
+          <a href="/taller" class="nav-link font-semibold">
             Taller
           </a>
         )}
 
         {user ? (
           <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-600">
+            <span class="text-sm user-email">
               {user.email}
             </span>
             <form action="/api/auth/logout" method="POST">
               <button
                 type="submit"
-                class="bg-red-600 text-white px-4 py-2 rounded-md text-sm hover:bg-red-700 transition"
+                class="btn-logout"
               >
                 Cerrar Sesión
               </button>
@@ -44,12 +45,165 @@ const user = await getUser(Astro.cookies);
         ) : (
           <a
             href="/login"
-            class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition"
+            class="btn-login"
           >
             Iniciar Sesión
           </a>
         )}
+
+        {/* Theme Toggle - Esquina superior derecha */}
+        <ThemeToggle />
       </div>
     </div>
   </nav>
 </header>
+
+<style>
+  /* Header Background */
+  .header-bg {
+    background-color: rgba(243, 243, 243, 0.95);
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s ease;
+  }
+
+  :global(.dark) .header-bg {
+    background-color: rgba(0, 0, 0, 0.95);
+    border-bottom: 1px solid rgba(148, 0, 255, 0.3);
+  }
+
+  /* Border */
+  .border-cyber-border {
+    border-color: rgba(148, 0, 255, 0.1);
+  }
+
+  :global(.dark) .border-cyber-border {
+    border-color: rgba(148, 0, 255, 0.3);
+  }
+
+  /* Logo */
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #9400FF;
+    transition: all 0.3s ease;
+  }
+
+  .logo-text:hover {
+    color: #9400FF;
+    text-shadow: 0 0 20px rgba(148, 0, 255, 0.5);
+  }
+
+  :global(.dark) .logo-text {
+    color: #00FFFF;
+  }
+
+  :global(.dark) .logo-text:hover {
+    color: #00FFFF;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  }
+
+  /* Navigation Links */
+  .nav-link {
+    color: #22223B;
+    transition: all 0.3s ease;
+    position: relative;
+    font-weight: 500;
+  }
+
+  .nav-link:hover {
+    color: #9400FF;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 50%;
+    background-color: #9400FF;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  :global(.dark) .nav-link {
+    color: #E1E1E1;
+  }
+
+  :global(.dark) .nav-link:hover {
+    color: #00FFFF;
+  }
+
+  :global(.dark) .nav-link::after {
+    background-color: #00FFFF;
+  }
+
+  /* User Email */
+  .user-email {
+    color: #22223B;
+    opacity: 0.8;
+  }
+
+  :global(.dark) .user-email {
+    color: #E1E1E1;
+    opacity: 0.9;
+  }
+
+  /* Buttons */
+  .btn-login {
+    background: linear-gradient(135deg, #9400FF 0%, #7000CC 100%);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+
+  .btn-login:hover {
+    background: linear-gradient(135deg, #7000CC 0%, #9400FF 100%);
+    box-shadow: 0 0 20px rgba(148, 0, 255, 0.5);
+    transform: translateY(-2px);
+  }
+
+  :global(.dark) .btn-login {
+    background: linear-gradient(135deg, #00FFFF 0%, #00CCCC 100%);
+    color: #000000;
+  }
+
+  :global(.dark) .btn-login:hover {
+    background: linear-gradient(135deg, #00CCCC 0%, #00FFFF 100%);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+
+  .btn-logout {
+    background-color: rgba(239, 68, 68, 0.9);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .btn-logout:hover {
+    background-color: rgb(220, 38, 38);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+
+  :global(.dark) .btn-logout {
+    background-color: rgba(239, 68, 68, 0.8);
+  }
+
+  :global(.dark) .btn-logout:hover {
+    background-color: rgb(239, 68, 68);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  }
+</style>

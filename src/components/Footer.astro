@@ -2,49 +2,123 @@
 const currentYear = new Date().getFullYear();
 ---
 
-<footer class="bg-gray-900 text-gray-300 mt-20">
+<footer class="footer-bg mt-20">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
-        <h3 class="text-white text-lg font-bold mb-4">Contadores IA</h3>
-        <p class="text-sm">
+        <h3 class="footer-brand mb-4">Contadores IA</h3>
+        <p class="footer-text">
           Capacitación en Inteligencia Artificial para contadores públicos en México.
         </p>
       </div>
 
       <div>
-        <h4 class="text-white font-semibold mb-4">Enlaces</h4>
+        <h4 class="footer-heading mb-4">Enlaces</h4>
         <ul class="space-y-2 text-sm">
           <li>
-            <a href="/" class="hover:text-white transition">Inicio</a>
+            <a href="/" class="footer-link">Inicio</a>
           </li>
           <li>
-            <a href="/blog" class="hover:text-white transition">Blog</a>
+            <a href="/blog" class="footer-link">Blog</a>
           </li>
           <li>
-            <a href="/login" class="hover:text-white transition">Acceso Premium</a>
+            <a href="/login" class="footer-link">Acceso Premium</a>
           </li>
         </ul>
       </div>
 
       <div>
-        <h4 class="text-white font-semibold mb-4">Recursos</h4>
+        <h4 class="footer-heading mb-4">Recursos</h4>
         <ul class="space-y-2 text-sm">
           <li>
-            <a href="#" class="hover:text-white transition">Podcast</a>
+            <a href="#" class="footer-link">Podcast</a>
           </li>
           <li>
-            <a href="#" class="hover:text-white transition">Videos</a>
+            <a href="#" class="footer-link">Videos</a>
           </li>
           <li>
-            <a href="#" class="hover:text-white transition">Cursos</a>
+            <a href="#" class="footer-link">Cursos</a>
           </li>
         </ul>
       </div>
     </div>
 
-    <div class="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
-      <p>&copy; {currentYear} Contadores IA. Todos los derechos reservados.</p>
+    <div class="footer-divider mt-8 pt-8 text-sm text-center">
+      <p class="footer-copyright">&copy; {currentYear} Contadores IA. Todos los derechos reservados.</p>
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-bg {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    border-top: 2px solid rgba(148, 0, 255, 0.2);
+  }
+
+  :global(.dark) .footer-bg {
+    background: linear-gradient(180deg, #000000 0%, #0a0014 100%);
+    border-top: 2px solid rgba(148, 0, 255, 0.4);
+  }
+
+  .footer-brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #9400FF;
+    text-shadow: 0 0 15px rgba(148, 0, 255, 0.5);
+  }
+
+  :global(.dark) .footer-brand {
+    color: #00FFFF;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  }
+
+  .footer-heading {
+    font-weight: 600;
+    color: white;
+  }
+
+  :global(.dark) .footer-heading {
+    color: #00FFFF;
+  }
+
+  .footer-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+  }
+
+  :global(.dark) .footer-text {
+    color: rgba(225, 225, 225, 0.6);
+  }
+
+  .footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .footer-link:hover {
+    color: #9400FF;
+    transform: translateX(5px);
+  }
+
+  :global(.dark) .footer-link:hover {
+    color: #00FFFF;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+
+  .footer-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  :global(.dark) .footer-divider {
+    border-top: 1px solid rgba(148, 0, 255, 0.3);
+  }
+
+  .footer-copyright {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  :global(.dark) .footer-copyright {
+    color: rgba(225, 225, 225, 0.4);
+  }
+</style>

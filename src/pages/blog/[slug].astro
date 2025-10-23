@@ -31,32 +31,32 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
-  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <article class="article-container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Header del artículo -->
-    <header class="mb-8">
-      <div class="flex items-center gap-2 mb-4">
+    <header class="article-header mb-12">
+      <div class="flex items-center gap-3 mb-6">
         {post.data.premium && (
-          <span class="bg-yellow-100 text-yellow-800 text-sm font-semibold px-3 py-1 rounded">
+          <span class="premium-badge">
             Contenido Premium
           </span>
         )}
-        <time class="text-gray-500">{formattedDate}</time>
+        <time class="article-date">{formattedDate}</time>
       </div>
 
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+      <h1 class="article-title text-4xl md:text-5xl font-bold mb-6">
         {post.data.title}
       </h1>
 
-      <p class="text-xl text-gray-600 mb-6">
+      <p class="article-description text-xl mb-8">
         {post.data.description}
       </p>
 
-      <div class="flex items-center gap-3">
-        <span class="text-sm text-gray-500">Por {post.data.author}</span>
-        <span class="text-gray-300">•</span>
+      <div class="article-meta flex items-center gap-3">
+        <span class="article-author">Por {post.data.author}</span>
+        <span class="meta-separator">•</span>
         <div class="flex flex-wrap gap-2">
           {post.data.tags.map((tag) => (
-            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+            <span class="article-tag">
               {tag}
             </span>
           ))}
@@ -66,46 +66,40 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
 
     <!-- Contenido o mensaje de acceso restringido -->
     {needsAuth ? (
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
-        <svg class="w-16 h-16 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="premium-lock">
+        <svg class="lock-icon mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
         </svg>
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">
+        <h2 class="lock-title text-2xl font-bold mb-3">
           Contenido Premium
         </h2>
 
         {/* Mensaje personalizado según la razón del bloqueo */}
         {accessResult.reason === 'not_authenticated' ? (
           <>
-            <p class="text-gray-600 mb-6">
+            <p class="lock-message mb-8">
               Este artículo es exclusivo para miembros. Inicia sesión para acceder.
             </p>
-            <a
-              href="/login"
-              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
-            >
+            <a href="/login" class="lock-btn">
               Iniciar Sesión
             </a>
           </>
         ) : accessResult.reason === 'no_membership' ? (
           <>
-            <p class="text-gray-600 mb-6">
+            <p class="lock-message mb-8">
               No tienes una membresía activa. Suscríbete para acceder a todo el contenido premium.
             </p>
-            <a
-              href="/pricing"
-              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
-            >
+            <a href="/pricing" class="lock-btn">
               Ver Planes
             </a>
           </>
         ) : accessResult.reason === 'expired' ? (
           <>
-            <p class="text-gray-600 mb-2">
+            <p class="lock-message mb-2">
               Tu membresía ha expirado.
             </p>
             {accessResult.membership?.end_date && (
-              <p class="text-sm text-gray-500 mb-6">
+              <p class="lock-date mb-8">
                 Venció el {new Date(accessResult.membership.end_date).toLocaleDateString('es-MX', {
                   year: 'numeric',
                   month: 'long',
@@ -113,34 +107,25 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
                 })}
               </p>
             )}
-            <a
-              href="/pricing"
-              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
-            >
+            <a href="/pricing" class="lock-btn">
               Renovar Membresía
             </a>
           </>
         ) : accessResult.reason === 'cancelled' ? (
           <>
-            <p class="text-gray-600 mb-6">
+            <p class="lock-message mb-8">
               Tu membresía ha sido cancelada. Contacta a soporte si crees que esto es un error.
             </p>
-            <a
-              href="/pricing"
-              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
-            >
+            <a href="/pricing" class="lock-btn">
               Ver Planes
             </a>
           </>
         ) : (
           <>
-            <p class="text-gray-600 mb-6">
+            <p class="lock-message mb-8">
               Este contenido requiere una membresía activa.
             </p>
-            <a
-              href="/login"
-              class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition inline-block"
-            >
+            <a href="/login" class="lock-btn">
               Iniciar Sesión
             </a>
           </>
@@ -153,11 +138,8 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     )}
 
     <!-- Navegación -->
-    <div class="mt-12 pt-8 border-t border-gray-200">
-      <a
-        href="/blog"
-        class="text-blue-600 hover:text-blue-800 font-semibold inline-flex items-center"
-      >
+    <div class="article-navigation mt-12 pt-8">
+      <a href="/blog" class="back-to-blog">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
@@ -168,73 +150,544 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
 </Layout>
 
 <style>
-  /* Estilos personalizados para el contenido Markdown */
-  .prose {
-    color: #374151;
+  /* ===== ESTILOS DEL ARTÍCULO ===== */
+
+  .article-container {
+    background-color: white;
+    transition: background-color 0.3s ease;
   }
 
-  .prose h1, .prose h2, .prose h3 {
-    color: #111827;
+  :global(.dark) .article-container {
+    background-color: #0a0a0a;
+  }
+
+  /* Header del Artículo */
+  .article-header {
+    border-bottom: 2px solid rgba(148, 0, 255, 0.1);
+    padding-bottom: 2rem;
+  }
+
+  :global(.dark) .article-header {
+    border-bottom-color: rgba(148, 0, 255, 0.3);
+  }
+
+  .premium-badge {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #000;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.375rem 1rem;
+    border-radius: 9999px;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  }
+
+  :global(.dark) .premium-badge {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  }
+
+  .article-date {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  :global(.dark) .article-date {
+    color: rgba(225, 225, 225, 0.6);
+  }
+
+  .article-title {
+    color: #22223B;
+    line-height: 1.2;
+  }
+
+  :global(.dark) .article-title {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .article-description {
+    color: #555;
+    line-height: 1.6;
+  }
+
+  :global(.dark) .article-description {
+    color: rgba(225, 225, 225, 0.8);
+  }
+
+  .article-author {
+    font-size: 0.875rem;
+    color: #666;
+    font-weight: 500;
+  }
+
+  :global(.dark) .article-author {
+    color: rgba(225, 225, 225, 0.7);
+  }
+
+  .meta-separator {
+    color: #d1d5db;
+  }
+
+  :global(.dark) .meta-separator {
+    color: rgba(148, 0, 255, 0.4);
+  }
+
+  .article-tag {
+    background: rgba(148, 0, 255, 0.1);
+    color: #9400FF;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(148, 0, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .article-tag:hover {
+    background: rgba(148, 0, 255, 0.2);
+    border-color: rgba(148, 0, 255, 0.4);
+  }
+
+  :global(.dark) .article-tag {
+    background: rgba(0, 255, 255, 0.1);
+    color: #00FFFF;
+    border-color: rgba(0, 255, 255, 0.3);
+  }
+
+  :global(.dark) .article-tag:hover {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+
+  /* Navegación */
+  .article-navigation {
+    border-top: 1px solid rgba(148, 0, 255, 0.1);
+  }
+
+  :global(.dark) .article-navigation {
+    border-top-color: rgba(148, 0, 255, 0.3);
+  }
+
+  .back-to-blog {
+    color: #9400FF;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .back-to-blog:hover {
+    color: #7000CC;
+    transform: translateX(-5px);
+  }
+
+  :global(.dark) .back-to-blog {
+    color: #00FFFF;
+  }
+
+  :global(.dark) .back-to-blog:hover {
+    color: #00CCCC;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+
+  /* Mensaje de Bloqueo Premium */
+  .premium-lock {
+    background: rgba(148, 0, 255, 0.05);
+    border: 2px solid rgba(148, 0, 255, 0.2);
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  :global(.dark) .premium-lock {
+    background: rgba(148, 0, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+  }
+
+  .lock-icon {
+    width: 4rem;
+    height: 4rem;
+    color: #9400FF;
+  }
+
+  :global(.dark) .lock-icon {
+    color: #00FFFF;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
+  }
+
+  .lock-title {
+    color: #22223B;
+  }
+
+  :global(.dark) .lock-title {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .lock-message {
+    color: #555;
+    font-size: 1.125rem;
+  }
+
+  :global(.dark) .lock-message {
+    color: rgba(225, 225, 225, 0.8);
+  }
+
+  .lock-date {
+    color: #666;
+    font-size: 0.875rem;
+  }
+
+  :global(.dark) .lock-date {
+    color: rgba(225, 225, 225, 0.6);
+  }
+
+  .lock-btn {
+    background: linear-gradient(135deg, #9400FF 0%, #7000CC 100%);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .lock-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(148, 0, 255, 0.4);
+  }
+
+  :global(.dark) .lock-btn {
+    background: linear-gradient(135deg, #00FFFF 0%, #00CCCC 100%);
+    color: #000;
+  }
+
+  :global(.dark) .lock-btn:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+  }
+
+  /* ===== ESTILOS DE TIPOGRAFÍA PARA CONTENIDO ===== */
+
+  .prose {
+    color: #374151;
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.8;
+  }
+
+  :global(.dark) .prose {
+    color: rgba(225, 225, 225, 0.9);
+  }
+
+  /* Encabezados */
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    color: #22223B;
     font-weight: 700;
-    margin-top: 2em;
+    line-height: 1.3;
+    margin-top: 2.5em;
     margin-bottom: 1em;
+    scroll-margin-top: 100px; /* Para navegación con anclas */
+  }
+
+  :global(.dark) .prose h1,
+  :global(.dark) .prose h2,
+  :global(.dark) .prose h3,
+  :global(.dark) .prose h4,
+  :global(.dark) .prose h5,
+  :global(.dark) .prose h6 {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .prose h1 {
+    font-size: 2.5em;
+    margin-top: 0;
   }
 
   .prose h2 {
-    font-size: 1.75em;
+    font-size: 2em;
+    padding-bottom: 0.3em;
+    border-bottom: 2px solid rgba(148, 0, 255, 0.1);
+  }
+
+  :global(.dark) .prose h2 {
+    border-bottom-color: rgba(148, 0, 255, 0.3);
   }
 
   .prose h3 {
     font-size: 1.5em;
   }
 
-  .prose p {
-    margin-bottom: 1.5em;
-    line-height: 1.75;
+  .prose h4 {
+    font-size: 1.25em;
   }
 
+  /* Párrafos */
+  .prose p {
+    margin-top: 0;
+    margin-bottom: 1.75em;
+    line-height: 1.8;
+  }
+
+  /* Enlaces */
+  .prose a {
+    color: #9400FF;
+    text-decoration: underline;
+    text-decoration-color: rgba(148, 0, 255, 0.3);
+    text-underline-offset: 3px;
+    transition: all 0.3s ease;
+  }
+
+  .prose a:hover {
+    color: #7000CC;
+    text-decoration-color: #9400FF;
+  }
+
+  :global(.dark) .prose a {
+    color: #00FFFF;
+    text-decoration-color: rgba(0, 255, 255, 0.3);
+  }
+
+  :global(.dark) .prose a:hover {
+    color: #00CCCC;
+    text-decoration-color: #00FFFF;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+
+  /* Listas */
   .prose ul, .prose ol {
+    margin-top: 1.5em;
     margin-bottom: 1.5em;
-    padding-left: 1.5em;
+    padding-left: 1.75em;
   }
 
   .prose li {
-    margin-bottom: 0.5em;
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+    line-height: 1.7;
   }
 
+  .prose ul > li {
+    position: relative;
+    padding-left: 0.5em;
+  }
+
+  .prose ul > li::marker {
+    color: #9400FF;
+  }
+
+  :global(.dark) .prose ul > li::marker {
+    color: #00FFFF;
+  }
+
+  .prose ol > li::marker {
+    color: #9400FF;
+    font-weight: 600;
+  }
+
+  :global(.dark) .prose ol > li::marker {
+    color: #00FFFF;
+  }
+
+  /* Nested lists */
+  .prose ul ul, .prose ul ol, .prose ol ul, .prose ol ol {
+    margin-top: 0.75em;
+    margin-bottom: 0.75em;
+  }
+
+  /* Código inline */
   .prose code {
-    background-color: #f3f4f6;
-    padding: 0.2em 0.4em;
-    border-radius: 0.25rem;
+    background-color: rgba(148, 0, 255, 0.1);
+    color: #9400FF;
+    padding: 0.2em 0.5em;
+    border-radius: 0.375rem;
     font-size: 0.9em;
+    font-weight: 500;
+    border: 1px solid rgba(148, 0, 255, 0.2);
   }
 
+  :global(.dark) .prose code {
+    background-color: rgba(0, 255, 255, 0.1);
+    color: #00FFFF;
+    border-color: rgba(0, 255, 255, 0.3);
+  }
+
+  /* Bloques de código */
   .prose pre {
-    background-color: #1f2937;
-    color: #f9fafb;
+    background-color: #1a1a2e;
+    color: #E1E1E1;
     padding: 1.5em;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     overflow-x: auto;
-    margin-bottom: 1.5em;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    border: 2px solid rgba(148, 0, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  :global(.dark) .prose pre {
+    background-color: #0a0014;
+    border-color: rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
   }
 
   .prose pre code {
     background-color: transparent;
     padding: 0;
     color: inherit;
+    border: none;
+    font-size: 0.95em;
   }
 
+  /* Strong (negritas) */
   .prose strong {
-    font-weight: 600;
-    color: #111827;
+    font-weight: 700;
+    color: #22223B;
   }
 
-  .prose a {
-    color: #2563eb;
-    text-decoration: underline;
+  :global(.dark) .prose strong {
+    color: #00FFFF;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
   }
 
-  .prose a:hover {
-    color: #1d4ed8;
+  /* Énfasis (cursivas) */
+  .prose em {
+    font-style: italic;
+    color: inherit;
+  }
+
+  /* Blockquotes */
+  .prose blockquote {
+    border-left: 4px solid #9400FF;
+    padding-left: 1.5em;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-style: italic;
+    color: #555;
+    background-color: rgba(148, 0, 255, 0.05);
+    padding-top: 1em;
+    padding-bottom: 1em;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+
+  :global(.dark) .prose blockquote {
+    border-left-color: #00FFFF;
+    background-color: rgba(0, 255, 255, 0.05);
+    color: rgba(225, 225, 225, 0.8);
+  }
+
+  .prose blockquote p {
+    margin-bottom: 0.75em;
+  }
+
+  .prose blockquote p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Tablas */
+  .prose table {
+    width: 100%;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    border-collapse: collapse;
+  }
+
+  .prose thead {
+    border-bottom: 2px solid #9400FF;
+  }
+
+  :global(.dark) .prose thead {
+    border-bottom-color: #00FFFF;
+  }
+
+  .prose th {
+    padding: 0.75em 1em;
+    text-align: left;
+    font-weight: 700;
+    color: #22223B;
+  }
+
+  :global(.dark) .prose th {
+    color: #00FFFF;
+  }
+
+  .prose td {
+    padding: 0.75em 1em;
+    border-bottom: 1px solid rgba(148, 0, 255, 0.1);
+  }
+
+  :global(.dark) .prose td {
+    border-bottom-color: rgba(148, 0, 255, 0.2);
+  }
+
+  .prose tbody tr:hover {
+    background-color: rgba(148, 0, 255, 0.05);
+  }
+
+  :global(.dark) .prose tbody tr:hover {
+    background-color: rgba(0, 255, 255, 0.05);
+  }
+
+  /* Líneas horizontales */
+  .prose hr {
+    margin-top: 3em;
+    margin-bottom: 3em;
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #9400FF, transparent);
+  }
+
+  :global(.dark) .prose hr {
+    background: linear-gradient(90deg, transparent, #00FFFF, transparent);
+  }
+
+  /* Imágenes */
+  .prose img {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    height: auto;
+  }
+
+  :global(.dark) .prose img {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(148, 0, 255, 0.2);
+  }
+
+  /* Figcaption */
+  .prose figcaption {
+    text-align: center;
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 0.75em;
+    font-style: italic;
+  }
+
+  :global(.dark) .prose figcaption {
+    color: rgba(225, 225, 225, 0.6);
+  }
+
+  /* Primer párrafo más grande */
+  .prose > p:first-of-type {
+    font-size: 1.25em;
+    line-height: 1.7;
+    color: #22223B;
+  }
+
+  :global(.dark) .prose > p:first-of-type {
+    color: rgba(225, 225, 225, 0.95);
   }
 </style>

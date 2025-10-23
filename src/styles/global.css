@@ -1,1 +1,139 @@
 @import "tailwindcss";
+
+/* Paleta de Colores Cyberpunk Glow */
+@theme {
+  /* Colores Primarios */
+  --color-cyber-primary: #9400FF;
+  --color-cyber-secondary: #00FFFF;
+
+  /* Modo Light */
+  --color-light-bg: #F3F3F3;
+  --color-light-text: #22223B;
+
+  /* Modo Dark */
+  --color-dark-bg: #000000;
+  --color-dark-text: #E1E1E1;
+}
+
+/* Variables CSS para theme switching */
+:root {
+  --bg-primary: var(--color-light-bg);
+  --text-primary: var(--color-light-text);
+  --primary: var(--color-cyber-primary);
+  --secondary: var(--color-cyber-secondary);
+}
+
+.dark {
+  --bg-primary: var(--color-dark-bg);
+  --text-primary: var(--color-dark-text);
+}
+
+/* Aplicar colores al body */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Scrollbar personalizada para dark mode */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #9400FF 0%, #00FFFF 100%);
+  border-radius: 5px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00FFFF 0%, #9400FF 100%);
+}
+
+/* Selection colors */
+::selection {
+  background-color: rgba(148, 0, 255, 0.3);
+  color: #22223B;
+}
+
+.dark ::selection {
+  background-color: rgba(0, 255, 255, 0.3);
+  color: #E1E1E1;
+}
+
+/* Links globales */
+a {
+  transition: all 0.3s ease;
+}
+
+/* Glow effect para elementos interactivos en dark mode */
+.dark button:hover,
+.dark a:hover {
+  filter: brightness(1.2);
+}
+
+/* Cards y contenedores */
+.card-bg {
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.dark .card-bg {
+  background-color: rgba(34, 34, 59, 0.3);
+  border: 1px solid rgba(148, 0, 255, 0.2);
+}
+
+.dark .card-bg:hover {
+  border-color: rgba(0, 255, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+/* Inputs y formularios */
+input,
+textarea,
+select {
+  background-color: white;
+  color: #22223B;
+  border: 1px solid rgba(148, 0, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #E1E1E1;
+  border-color: rgba(148, 0, 255, 0.3);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #9400FF;
+  box-shadow: 0 0 10px rgba(148, 0, 255, 0.3);
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: #00FFFF;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Headings con gradiente */
+h1, h2, h3, h4, h5, h6 {
+  transition: color 0.3s ease;
+}
+
+.dark h1,
+.dark h2 {
+  background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

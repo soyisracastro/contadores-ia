@@ -17,39 +17,36 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
 }).format(pubDate);
 ---
 
-<article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+<article class="blog-card">
   <div class="p-6">
     <div class="flex items-center gap-2 mb-3">
       {premium && (
-        <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">
+        <span class="premium-badge">
           Premium
         </span>
       )}
-      <time class="text-sm text-gray-500">{formattedDate}</time>
+      <time class="blog-date">{formattedDate}</time>
     </div>
 
-    <h3 class="text-xl font-bold text-gray-900 mb-2">
-      <a href={`/blog/${slug}`} class="hover:text-blue-600 transition">
+    <h3 class="blog-title mb-2">
+      <a href={`/blog/${slug}`} class="blog-title-link">
         {title}
       </a>
     </h3>
 
-    <p class="text-gray-600 mb-4 line-clamp-2">
+    <p class="blog-description mb-4">
       {description}
     </p>
 
     <div class="flex flex-wrap gap-2 mb-4">
       {tags.map((tag) => (
-        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+        <span class="blog-tag">
           {tag}
         </span>
       ))}
     </div>
 
-    <a
-      href={`/blog/${slug}`}
-      class="text-blue-600 hover:text-blue-800 text-sm font-semibold inline-flex items-center"
-    >
+    <a href={`/blog/${slug}`} class="blog-read-more">
       Leer más
       <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -57,3 +54,137 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     </a>
   </div>
 </article>
+
+<style>
+  .blog-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 2px solid rgba(148, 0, 255, 0.1);
+    transition: all 0.4s ease;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(148, 0, 255, 0.4);
+    box-shadow: 0 20px 40px rgba(148, 0, 255, 0.2);
+  }
+
+  :global(.dark) .blog-card {
+    background: rgba(34, 34, 59, 0.4);
+    border-color: rgba(148, 0, 255, 0.3);
+  }
+
+  :global(.dark) .blog-card:hover {
+    border-color: rgba(0, 255, 255, 0.6);
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+  }
+
+  .premium-badge {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  }
+
+  :global(.dark) .premium-badge {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+  }
+
+  .blog-date {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  :global(.dark) .blog-date {
+    color: rgba(225, 225, 225, 0.6);
+  }
+
+  .blog-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .blog-title-link {
+    color: #22223B;
+    transition: all 0.3s ease;
+  }
+
+  .blog-title-link:hover {
+    color: #9400FF;
+  }
+
+  :global(.dark) .blog-title-link {
+    color: #E1E1E1;
+  }
+
+  :global(.dark) .blog-title-link:hover {
+    color: #00FFFF;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+
+  .blog-description {
+    color: #555;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  :global(.dark) .blog-description {
+    color: rgba(225, 225, 225, 0.7);
+  }
+
+  .blog-tag {
+    background: rgba(148, 0, 255, 0.1);
+    color: #9400FF;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(148, 0, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .blog-tag:hover {
+    background: rgba(148, 0, 255, 0.2);
+    border-color: rgba(148, 0, 255, 0.4);
+  }
+
+  :global(.dark) .blog-tag {
+    background: rgba(0, 255, 255, 0.1);
+    color: #00FFFF;
+    border-color: rgba(0, 255, 255, 0.3);
+  }
+
+  :global(.dark) .blog-tag:hover {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+
+  .blog-read-more {
+    color: #9400FF;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .blog-read-more:hover {
+    color: #7000CC;
+    transform: translateX(5px);
+  }
+
+  :global(.dark) .blog-read-more {
+    color: #00FFFF;
+  }
+
+  :global(.dark) .blog-read-more:hover {
+    color: #00CCCC;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+</style>
