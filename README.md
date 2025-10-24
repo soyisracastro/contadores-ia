@@ -145,15 +145,28 @@ npm run build
 npm run preview
 ```
 
-### Desplegar en Vercel/Netlify
+### 🚀 Desplegar en Vercel (Recomendado)
 
-1. Conecta tu repositorio de Git
-2. Configura las variables de entorno:
+Este proyecto está optimizado para Vercel. **Consulta la [Guía de Deploy en Vercel](./VERCEL_SETUP.md)** para instrucciones detalladas.
+
+**Pasos rápidos:**
+
+1. **Push a GitHub**:
+   ```bash
+   git add .
+   git commit -m "Deploy to Vercel"
+   git push origin main
+   ```
+
+2. Ve a [vercel.com](https://vercel.com) y conecta tu repositorio
+
+3. **(Opcional)** Configura las variables de entorno si quieres autenticación:
    - `PUBLIC_SUPABASE_URL`
    - `PUBLIC_SUPABASE_ANON_KEY`
-   - `PUBLIC_SITE_URL` (tu dominio en producción)
-3. Configura el build command: `npm run build`
-4. Configura el output directory: `dist`
+
+4. ¡Vercel detecta todo automáticamente y hace el deploy!
+
+**Nota:** El sitio funciona sin configurar variables de entorno (modo lectura). Solo necesitas configurarlas si quieres habilitar autenticación.
 
 ## Flujo de Autenticación
 
