@@ -151,7 +151,6 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
 
 <style>
   /* ===== ESTILOS DEL ARTÍCULO ===== */
-
   .article-container {
     background-color: white;
     transition: background-color 0.3s ease;
@@ -375,27 +374,14 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
   }
 
   /* ===== ESTILOS DE TIPOGRAFÍA PARA CONTENIDO ===== */
-
-  .prose {
-    color: #374151;
-    font-size: 1.125rem; /* 18px */
-    line-height: 1.8;
-  }
+  /* Solo personalizamos colores y efectos visuales del tema */
+  /* Los espaciados y tipografía base los maneja @tailwindcss/typography */
 
   :global(.dark) .prose {
     color: rgba(225, 225, 225, 0.9);
   }
 
-  /* Encabezados */
-  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-    color: #22223B;
-    font-weight: 700;
-    line-height: 1.3;
-    margin-top: 2.5em;
-    margin-bottom: 1em;
-    scroll-margin-top: 100px; /* Para navegación con anclas */
-  }
-
+  /* Headings - Solo colores del tema */
   :global(.dark) .prose h1,
   :global(.dark) .prose h2,
   :global(.dark) .prose h3,
@@ -408,42 +394,14 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     background-clip: text;
   }
 
-  .prose h1 {
-    font-size: 2.5em;
-    margin-top: 0;
-  }
-
-  .prose h2 {
-    font-size: 2em;
-    padding-bottom: 0.3em;
-    border-bottom: 2px solid rgba(148, 0, 255, 0.1);
-  }
-
   :global(.dark) .prose h2 {
     border-bottom-color: rgba(148, 0, 255, 0.3);
   }
 
-  .prose h3 {
-    font-size: 1.5em;
-  }
-
-  .prose h4 {
-    font-size: 1.25em;
-  }
-
-  /* Párrafos */
-  .prose p {
-    margin-top: 0;
-    margin-bottom: 1.75em;
-    line-height: 1.8;
-  }
-
-  /* Enlaces */
+  /* Enlaces - Colores y efectos del tema */
   .prose a {
     color: #9400FF;
-    text-decoration: underline;
     text-decoration-color: rgba(148, 0, 255, 0.3);
-    text-underline-offset: 3px;
     transition: all 0.3s ease;
   }
 
@@ -463,24 +421,7 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
   }
 
-  /* Listas */
-  .prose ul, .prose ol {
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
-    padding-left: 1.75em;
-  }
-
-  .prose li {
-    margin-top: 0.75em;
-    margin-bottom: 0.75em;
-    line-height: 1.7;
-  }
-
-  .prose ul > li {
-    position: relative;
-    padding-left: 0.5em;
-  }
-
+  /* Listas - Solo colores de markers */
   .prose ul > li::marker {
     color: #9400FF;
   }
@@ -498,20 +439,10 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     color: #00FFFF;
   }
 
-  /* Nested lists */
-  .prose ul ul, .prose ul ol, .prose ol ul, .prose ol ol {
-    margin-top: 0.75em;
-    margin-bottom: 0.75em;
-  }
-
-  /* Código inline */
+  /* Código inline - Colores y bordes del tema */
   .prose code {
     background-color: rgba(148, 0, 255, 0.1);
     color: #9400FF;
-    padding: 0.2em 0.5em;
-    border-radius: 0.375rem;
-    font-size: 0.9em;
-    font-weight: 500;
     border: 1px solid rgba(148, 0, 255, 0.2);
   }
 
@@ -521,15 +452,9 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     border-color: rgba(0, 255, 255, 0.3);
   }
 
-  /* Bloques de código */
+  /* Bloques de código - Colores y efectos del tema */
   .prose pre {
     background-color: #1a1a2e;
-    color: #E1E1E1;
-    padding: 1.5em;
-    border-radius: 0.75rem;
-    overflow-x: auto;
-    margin-top: 2em;
-    margin-bottom: 2em;
     border: 2px solid rgba(148, 0, 255, 0.2);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
@@ -542,15 +467,11 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
 
   .prose pre code {
     background-color: transparent;
-    padding: 0;
-    color: inherit;
     border: none;
-    font-size: 0.95em;
   }
 
-  /* Strong (negritas) */
+  /* Strong - Colores del tema */
   .prose strong {
-    font-weight: 700;
     color: #22223B;
   }
 
@@ -559,26 +480,11 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     text-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
   }
 
-  /* Énfasis (cursivas) */
-  .prose em {
-    font-style: italic;
-    color: inherit;
-  }
-
-  /* Blockquotes */
+  /* Blockquotes - Colores y bordes del tema */
   .prose blockquote {
-    border-left: 4px solid #9400FF;
-    padding-left: 1.5em;
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 2em;
-    margin-bottom: 2em;
-    font-style: italic;
-    color: #555;
+    border-left-color: #9400FF;
     background-color: rgba(148, 0, 255, 0.05);
-    padding-top: 1em;
-    padding-bottom: 1em;
-    border-radius: 0 0.5rem 0.5rem 0;
+    color: #555;
   }
 
   :global(.dark) .prose blockquote {
@@ -587,24 +493,9 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     color: rgba(225, 225, 225, 0.8);
   }
 
-  .prose blockquote p {
-    margin-bottom: 0.75em;
-  }
-
-  .prose blockquote p:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Tablas */
-  .prose table {
-    width: 100%;
-    margin-top: 2em;
-    margin-bottom: 2em;
-    border-collapse: collapse;
-  }
-
+  /* Tablas - Colores del tema */
   .prose thead {
-    border-bottom: 2px solid #9400FF;
+    border-bottom-color: #9400FF;
   }
 
   :global(.dark) .prose thead {
@@ -612,9 +503,6 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
   }
 
   .prose th {
-    padding: 0.75em 1em;
-    text-align: left;
-    font-weight: 700;
     color: #22223B;
   }
 
@@ -623,8 +511,7 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
   }
 
   .prose td {
-    padding: 0.75em 1em;
-    border-bottom: 1px solid rgba(148, 0, 255, 0.1);
+    border-bottom-color: rgba(148, 0, 255, 0.1);
   }
 
   :global(.dark) .prose td {
@@ -639,12 +526,9 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     background-color: rgba(0, 255, 255, 0.05);
   }
 
-  /* Líneas horizontales */
+  /* Líneas horizontales - Gradientes del tema */
   .prose hr {
-    margin-top: 3em;
-    margin-bottom: 3em;
     border: none;
-    height: 2px;
     background: linear-gradient(90deg, transparent, #9400FF, transparent);
   }
 
@@ -652,14 +536,9 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     background: linear-gradient(90deg, transparent, #00FFFF, transparent);
   }
 
-  /* Imágenes */
+  /* Imágenes - Bordes y sombras del tema */
   .prose img {
-    margin-top: 2em;
-    margin-bottom: 2em;
-    border-radius: 0.75rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
-    height: auto;
   }
 
   :global(.dark) .prose img {
@@ -667,27 +546,12 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     border: 1px solid rgba(148, 0, 255, 0.2);
   }
 
-  /* Figcaption */
+  /* Figcaption - Colores del tema */
   .prose figcaption {
-    text-align: center;
-    font-size: 0.9em;
     color: #666;
-    margin-top: 0.75em;
-    font-style: italic;
   }
 
   :global(.dark) .prose figcaption {
     color: rgba(225, 225, 225, 0.6);
-  }
-
-  /* Primer párrafo más grande */
-  .prose > p:first-of-type {
-    font-size: 1.25em;
-    line-height: 1.7;
-    color: #22223B;
-  }
-
-  :global(.dark) .prose > p:first-of-type {
-    color: rgba(225, 225, 225, 0.95);
   }
 </style>
