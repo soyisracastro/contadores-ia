@@ -15,6 +15,10 @@
 import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { config } from 'dotenv';
+
+// Cargar variables de entorno
+config();
 
 // Configuración
 const SUPABASE_URL = process.env.PUBLIC_SUPABASE_URL || '';

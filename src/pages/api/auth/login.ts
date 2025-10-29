@@ -13,11 +13,14 @@ export const POST: APIRoute = async ({ request, redirect }) => {
       });
     }
 
-    // Enviar código OTP al email
+    // Enviar magic link al email
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: `${import.meta.env.PUBLIC_SITE_URL}/auth/callback`,
+        data: {
+          redirect_to: `${import.meta.env.PUBLIC_SITE_URL}/auth/callback`
+        }
       }
     });
 
@@ -30,7 +33,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 
     return new Response(JSON.stringify({
       success: true,
-      message: 'Revisa tu email para el código de verificación'
+      message: 'Revisa tu email para el enlace de acceso'
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
