@@ -7,6 +7,8 @@ import FeatureCard from '../components/cards/FeatureCard.astro';
 import BlogCard from '../components/cards/BlogCard.astro';
 import ArticleHeader from '../components/article/ArticleHeader.astro';
 import PremiumLockMessage from '../components/article/PremiumLockMessage.astro';
+import Input from '../components/forms/Input.astro';
+import FormContainer from '../components/forms/FormContainer.astro';
 
 // Datos de ejemplo para los componentes
 const samplePost = {
@@ -63,6 +65,13 @@ const sampleAccessResult = {
           <ul class="space-y-1 text-sm">
             <li><a href="#article-header" class="text-blue-600 hover:underline">Article Header</a></li>
             <li><a href="#premium-lock" class="text-blue-600 hover:underline">Premium Lock</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Formularios</h3>
+          <ul class="space-y-1 text-sm">
+            <li><a href="#form-inputs" class="text-blue-600 hover:underline">Form Inputs</a></li>
+            <li><a href="#form-container" class="text-blue-600 hover:underline">Form Container</a></li>
           </ul>
         </div>
       </div>
@@ -356,6 +365,104 @@ const sampleAccessResult = {
       </div>
     </section>
 
+    <!-- SECTION: Form Inputs -->
+    <section id="form-inputs" class="mb-16">
+      <SectionHeader
+        title="Form Inputs"
+        icon="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <div class="space-y-6">
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Variantes de Input</h3>
+          <Input
+            id="email-demo"
+            name="email-demo"
+            type="email"
+            label="Correo electrónico"
+            placeholder="tu@email.com"
+            required
+          />
+          <Input
+            id="password-demo"
+            name="password-demo"
+            type="password"
+            label="Contraseña"
+            placeholder="Tu contraseña"
+          />
+          <Input
+            id="text-helper"
+            name="text-helper"
+            type="text"
+            label="Código de verificación"
+            placeholder="123456"
+            maxlength={6}
+            helperText="Revisa tu email para el código de 6 dígitos"
+          />
+          <Input
+            id="disabled-demo"
+            name="disabled-demo"
+            type="text"
+            label="Campo deshabilitado"
+            placeholder="No puedes editar esto"
+            disabled
+          />
+        </div>
+
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<Input
+  id="email"
+  name="email"
+  type="email"
+  label="Correo electrónico"
+  placeholder="tu@email.com"
+  required
+/>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Form Container -->
+    <section id="form-container" class="mb-16">
+      <SectionHeader
+        title="Form Container"
+        icon="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <FormContainer
+          title="Ejemplo de Formulario"
+          subtitle="Contenedor con estilo unificado"
+        >
+          <Input
+            id="example-email"
+            name="example-email"
+            type="email"
+            label="Email"
+            placeholder="tu@email.com"
+            required
+          />
+          <Button variant="primary" size="lg" class="w-full mt-4">
+            Enviar
+          </Button>
+        </FormContainer>
+
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<FormContainer
+  title="Título del Formulario"
+  subtitle="Subtítulo opcional"
+>
+  <Input ... />
+  <Button ... />
+</FormContainer>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
     <!-- Estructura de componentes -->
     <section class="mb-16">
       <SectionHeader
@@ -381,7 +488,9 @@ const sampleAccessResult = {
 │   ├── ArticleHeader.astro
 │   └── PremiumLockMessage.astro
 ├── forms/
-│   └── (componentes de formularios)
+│   ├── Input.astro
+│   ├── FormContainer.astro
+│   └── LoginForm.astro
 ├── common/
 │   ├── Button.astro
 │   ├── Badge.astro

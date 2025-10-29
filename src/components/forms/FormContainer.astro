@@ -1,0 +1,75 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  class?: string;
+}
+
+const {
+  title,
+  subtitle,
+  class: className = ''
+} = Astro.props;
+---
+
+<div class:list={['form-container-wrapper', className]}>
+  <div class="form-header">
+    <h2 class="form-title">{title}</h2>
+    {subtitle && <p class="form-subtitle">{subtitle}</p>}
+  </div>
+
+  <div class="form-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .form-container-wrapper {
+    max-width: 28rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .form-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .form-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #22223B;
+    margin-bottom: 0.5rem;
+  }
+
+  :global(.dark) .form-title {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .form-subtitle {
+    font-size: 0.875rem;
+    color: #6B7280;
+  }
+
+  :global(.dark) .form-subtitle {
+    color: #9CA3AF;
+  }
+
+  .form-content {
+    background: white;
+    padding: 2rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(148, 0, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  :global(.dark) .form-content {
+    background: rgba(34, 34, 59, 0.4);
+    border-color: rgba(148, 0, 255, 0.3);
+    box-shadow: 0 0 20px rgba(148, 0, 255, 0.1);
+  }
+</style>

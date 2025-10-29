@@ -1,179 +1,36 @@
 ---
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
+import FormContainer from '../components/forms/FormContainer.astro';
+import LoginForm from '../components/forms/LoginForm.astro';
+import { getUser } from '../lib/auth';
 
 // Si el usuario ya está autenticado, redirigir
-import { getUser } from '../lib/auth';
 const user = await getUser(Astro.cookies);
 if (user) {
   return Astro.redirect('/');
 }
 ---
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesión - Contadores IA</title>
-</head>
-<body class="bg-gray-50 min-h-screen flex items-center justify-center px-4">
-  <div class="max-w-md w-full space-y-8">
-    <div>
-      <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">
-        Contadores IA
-      </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
-        Accede a contenido exclusivo
-      </p>
-    </div>
-
-    <div class="bg-white py-8 px-6 shadow rounded-lg">
-      <form id="login-form" class="space-y-6">
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">
-            Correo electrónico
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="tu@email.com"
-          />
-        </div>
-
-        <div id="message" class="hidden text-sm"></div>
-
-        <button
-          type="submit"
-          id="submit-btn"
-          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Enviar código de verificación
-        </button>
-      </form>
-
-      <div id="verify-section" class="hidden mt-6 pt-6 border-t border-gray-200">
-        <form id="verify-form" class="space-y-4">
-          <div>
-            <label for="token" class="block text-sm font-medium text-gray-700">
-              Código de verificación
-            </label>
-            <input
-              id="token"
-              name="token"
-              type="text"
-              required
-              maxlength="6"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="123456"
-            />
-            <p class="mt-1 text-xs text-gray-500">
-              Revisa tu email para el código de 6 dígitos
-            </p>
-          </div>
-
-          <button
-            type="submit"
-            id="verify-btn"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Verificar código
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <p class="text-center text-xs text-gray-500">
-      Recibirás un email con un código de 6 dígitos para acceder
-    </p>
+<Layout
+  title="Iniciar Sesión"
+  description="Accede a tu cuenta de Contadores IA"
+>
+  <div class="login-page">
+    <FormContainer
+      title="Contadores IA"
+      subtitle="Accede a contenido exclusivo"
+    >
+      <LoginForm />
+    </FormContainer>
   </div>
+</Layout>
 
-  <script>
-    let userEmail = '';
-
-    const loginForm = document.getElementById('login-form') as HTMLFormElement;
-    const verifyForm = document.getElementById('verify-form') as HTMLFormElement;
-    const verifySection = document.getElementById('verify-section') as HTMLDivElement;
-    const messageDiv = document.getElementById('message') as HTMLDivElement;
-    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
-    const verifyBtn = document.getElementById('verify-btn') as HTMLButtonElement;
-
-    // Función para mostrar mensajes
-    function showMessage(text: string, isError: boolean = false) {
-      messageDiv.textContent = text;
-      messageDiv.className = `text-sm ${isError ? 'text-red-600' : 'text-green-600'}`;
-      messageDiv.classList.remove('hidden');
-    }
-
-    // Enviar código OTP
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Enviando...';
-
-      const formData = new FormData(loginForm);
-      userEmail = formData.get('email') as string;
-
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          showMessage(data.message);
-          verifySection.classList.remove('hidden');
-          loginForm.querySelector('input')?.setAttribute('readonly', 'true');
-          submitBtn.classList.add('hidden');
-        } else {
-          showMessage(data.error, true);
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Enviar código de verificación';
-        }
-      } catch (error) {
-        showMessage('Error al enviar el código', true);
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Enviar código de verificación';
-      }
-    });
-
-    // Verificar código OTP
-    verifyForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      verifyBtn.disabled = true;
-      verifyBtn.textContent = 'Verificando...';
-
-      const formData = new FormData(verifyForm);
-      formData.append('email', userEmail);
-
-      try {
-        const response = await fetch('/api/auth/verify', {
-          method: 'POST',
-          body: formData
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          showMessage('¡Autenticación exitosa! Redirigiendo...');
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1000);
-        } else {
-          showMessage(data.error, true);
-          verifyBtn.disabled = false;
-          verifyBtn.textContent = 'Verificar código';
-        }
-      } catch (error) {
-        showMessage('Error al verificar el código', true);
-        verifyBtn.disabled = false;
-        verifyBtn.textContent = 'Verificar código';
-      }
-    });
-  </script>
-</body>
-</html>
+<style>
+  .login-page {
+    min-height: calc(100vh - 4rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+</style>
