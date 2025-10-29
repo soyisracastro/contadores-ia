@@ -25,39 +25,13 @@ import Button from '../common/Button.astro';
       class="w-full"
       id="submit-btn"
     >
-      Enviar código de verificación
+      Enviar enlace de acceso
     </Button>
   </form>
 
-  <!-- Sección de verificación (oculta inicialmente) -->
-  <div id="verify-section" class="hidden verify-section">
-    <form id="verify-form" class="space-y-4">
-      <Input
-        id="token"
-        name="token"
-        type="text"
-        label="Código de verificación"
-        placeholder="123456"
-        maxlength={6}
-        helperText="Revisa tu email para el código de 6 dígitos"
-        required
-      />
-
-      <Button
-        type="submit"
-        variant="primary"
-        size="lg"
-        class="w-full btn-verify"
-        id="verify-btn"
-      >
-        Verificar código
-      </Button>
-    </form>
-  </div>
-
   <!-- Nota informativa -->
   <p class="info-text">
-    Recibirás un email con un código de 6 dígitos para acceder
+    Recibirás un email con un enlace para acceder
   </p>
 </div>
 
@@ -129,15 +103,9 @@ import Button from '../common/Button.astro';
 </style>
 
 <script>
-  let userEmail = '';
-
   const loginForm = document.getElementById('login-form') as HTMLFormElement;
-  const verifyForm = document.getElementById('verify-form') as HTMLFormElement;
-  const verifySection = document.getElementById('verify-section') as HTMLDivElement;
   const messageDiv = document.getElementById('message') as HTMLDivElement;
   const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
-  const verifyBtn = document.getElementById('verify-btn') as HTMLButtonElement;
-  const emailInput = document.getElementById('email') as HTMLInputElement;
 
   // Función para mostrar mensajes
   function showMessage(text: string, isError: boolean = false) {
@@ -146,14 +114,13 @@ import Button from '../common/Button.astro';
     messageDiv.classList.remove('hidden');
   }
 
-  // Enviar código OTP
+  // Enviar magic link
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     submitBtn.disabled = true;
     submitBtn.textContent = 'Enviando...';
 
     const formData = new FormData(loginForm);
-    userEmail = formData.get('email') as string;
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -165,52 +132,16 @@ import Button from '../common/Button.astro';
 
       if (response.ok) {
         showMessage(data.message);
-        verifySection.classList.remove('hidden');
-        emailInput.setAttribute('readonly', 'true');
-        submitBtn.classList.add('hidden');
+        submitBtn.textContent = 'Enlace enviado';
       } else {
         showMessage(data.error, true);
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Enviar código de verificación';
+        submitBtn.textContent = 'Enviar enlace de acceso';
       }
     } catch (error) {
-      showMessage('Error al enviar el código', true);
+      showMessage('Error al enviar el enlace', true);
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Enviar código de verificación';
-    }
-  });
-
-  // Verificar código OTP
-  verifyForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    verifyBtn.disabled = true;
-    verifyBtn.textContent = 'Verificando...';
-
-    const formData = new FormData(verifyForm);
-    formData.append('email', userEmail);
-
-    try {
-      const response = await fetch('/api/auth/verify', {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        showMessage('¡Autenticación exitosa! Redirigiendo...');
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1000);
-      } else {
-        showMessage(data.error, true);
-        verifyBtn.disabled = false;
-        verifyBtn.textContent = 'Verificar código';
-      }
-    } catch (error) {
-      showMessage('Error al verificar el código', true);
-      verifyBtn.disabled = false;
-      verifyBtn.textContent = 'Verificar código';
+      submitBtn.textContent = 'Enviar enlace de acceso';
     }
   });
 </script>

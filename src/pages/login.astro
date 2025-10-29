@@ -9,6 +9,9 @@ const user = await getUser(Astro.cookies);
 if (user) {
   return Astro.redirect('/');
 }
+
+// Manejar errores de autenticación
+const error = Astro.url.searchParams.get('error');
 ---
 
 <Layout
@@ -20,6 +23,17 @@ if (user) {
       title="Contadores IA"
       subtitle="Accede a contenido exclusivo"
     >
+      {error && (
+        <div class="error-message">
+          {error === 'invalid_token' && 'Enlace de acceso inválido o expirado. Intenta iniciar sesión nuevamente.'}
+          {error === 'session_error' && 'Error al establecer la sesión. Intenta nuevamente.'}
+          {error === 'callback_error' && 'Error en el proceso de autenticación. Intenta nuevamente.'}
+          {error === 'auth_error' && 'Error de autenticación. El enlace puede haber expirado.'}
+          {error === 'invalid_token_type' && 'Tipo de token inválido. Intenta iniciar sesión nuevamente.'}
+          {error === 'no_session' && 'No se pudo crear la sesión. Intenta iniciar sesión nuevamente.'}
+          {error === 'no_auth_data' && 'No se encontraron datos de autenticación. Verifica que estés usando un enlace válido.'}
+        </div>
+      )}
       <LoginForm />
     </FormContainer>
   </div>
@@ -32,5 +46,16 @@ if (user) {
     align-items: center;
     justify-content: center;
     padding: 2rem 1rem;
+  }
+
+  .error-message {
+    background-color: #FEE2E2;
+    color: #991B1B;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid #EF4444;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    text-align: center;
   }
 </style>
