@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Configuración de dark mode usando clase */
+@variant dark (&:where(.dark, .dark *));
+
 /* Paleta de Colores Cyberpunk Glow */
 @theme {
   /* Colores Primarios */
@@ -30,8 +33,7 @@
 
 /* Aplicar colores al body */
 body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  /* Removemos estilos fijos para permitir que Tailwind maneje los colores */
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -125,15 +127,9 @@ select:focus {
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
 }
 
-/* Headings con gradiente */
+/* Headings con gradiente - Solo para headings que lo necesiten específicamente */
 h1, h2, h3, h4, h5, h6 {
   transition: color 0.3s ease;
 }
 
-.dark h1,
-.dark h2 {
-  background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* Los componentes aplicarán sus propios gradientes cuando sea necesario */

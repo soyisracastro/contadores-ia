@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getCollection, getEntry } from 'astro:content';
+import ArticleHeader from '../../components/article/ArticleHeader.astro';
+import PremiumLockMessage from '../../components/article/PremiumLockMessage.astro';
+import { getEntry } from 'astro:content';
 import { canAccessPremiumContent } from '../../lib/auth';
 
 // Obtener el slug de la URL
@@ -22,115 +24,23 @@ const accessResult = await canAccessPremiumContent(Astro.cookies);
 // Determinar si mostrar contenido o mensaje de bloqueo
 const canAccess = !post.data.premium || accessResult.hasAccess;
 const needsAuth = post.data.premium && !canAccess;
-
-const formattedDate = new Intl.DateTimeFormat('es-MX', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-}).format(post.data.pubDate);
 ---
 
 <Layout title={post.data.title} description={post.data.description}>
   <article class="article-container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Header del artículo -->
-    <header class="article-header mb-12">
-      <div class="flex items-center gap-3 mb-6">
-        {post.data.premium && (
-          <span class="premium-badge">
-            Contenido Premium
-          </span>
-        )}
-        <time class="article-date">{formattedDate}</time>
-      </div>
-
-      <h1 class="article-title text-4xl md:text-5xl font-bold mb-6">
-        {post.data.title}
-      </h1>
-
-      <p class="article-description text-xl mb-8">
-        {post.data.description}
-      </p>
-
-      <div class="article-meta flex items-center gap-3">
-        <span class="article-author">Por {post.data.author}</span>
-        <span class="meta-separator">•</span>
-        <div class="flex flex-wrap gap-2">
-          {post.data.tags.map((tag) => (
-            <span class="article-tag">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-    </header>
+    <ArticleHeader
+      title={post.data.title}
+      description={post.data.description}
+      pubDate={post.data.pubDate}
+      author={post.data.author}
+      tags={post.data.tags}
+      premium={post.data.premium}
+    />
 
     <!-- Contenido o mensaje de acceso restringido -->
     {needsAuth ? (
-      <div class="premium-lock">
-        <svg class="lock-icon mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-        </svg>
-        <h2 class="lock-title text-2xl font-bold mb-3">
-          Contenido Premium
-        </h2>
-
-        {/* Mensaje personalizado según la razón del bloqueo */}
-        {accessResult.reason === 'not_authenticated' ? (
-          <>
-            <p class="lock-message mb-8">
-              Este artículo es exclusivo para miembros. Inicia sesión para acceder.
-            </p>
-            <a href="/login" class="lock-btn">
-              Iniciar Sesión
-            </a>
-          </>
-        ) : accessResult.reason === 'no_membership' ? (
-          <>
-            <p class="lock-message mb-8">
-              No tienes una membresía activa. Suscríbete para acceder a todo el contenido premium.
-            </p>
-            <a href="/pricing" class="lock-btn">
-              Ver Planes
-            </a>
-          </>
-        ) : accessResult.reason === 'expired' ? (
-          <>
-            <p class="lock-message mb-2">
-              Tu membresía ha expirado.
-            </p>
-            {accessResult.membership?.end_date && (
-              <p class="lock-date mb-8">
-                Venció el {new Date(accessResult.membership.end_date).toLocaleDateString('es-MX', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </p>
-            )}
-            <a href="/pricing" class="lock-btn">
-              Renovar Membresía
-            </a>
-          </>
-        ) : accessResult.reason === 'cancelled' ? (
-          <>
-            <p class="lock-message mb-8">
-              Tu membresía ha sido cancelada. Contacta a soporte si crees que esto es un error.
-            </p>
-            <a href="/pricing" class="lock-btn">
-              Ver Planes
-            </a>
-          </>
-        ) : (
-          <>
-            <p class="lock-message mb-8">
-              Este contenido requiere una membresía activa.
-            </p>
-            <a href="/login" class="lock-btn">
-              Iniciar Sesión
-            </a>
-          </>
-        )}
-      </div>
+      <PremiumLockMessage accessResult={accessResult} />
     ) : (
       <div class="prose prose-lg max-w-none">
         <Content />
@@ -150,130 +60,29 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
 </Layout>
 
 <style>
-  /* ===== ESTILOS DEL ARTÍCULO ===== */
+  /* ===== ARTICLE CONTAINER ===== */
   .article-container {
-    background-color: white;
-    transition: background-color 0.3s ease;
+    background: white;
   }
 
   :global(.dark) .article-container {
-    background-color: #0a0a0a;
+    background: #0a0a0a;
   }
 
-  /* Header del Artículo */
-  .article-header {
-    border-bottom: 2px solid rgba(148, 0, 255, 0.1);
-    padding-bottom: 2rem;
-  }
-
-  :global(.dark) .article-header {
-    border-bottom-color: rgba(148, 0, 255, 0.3);
-  }
-
-  .premium-badge {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    color: #000;
-    font-size: 0.875rem;
-    font-weight: 600;
-    padding: 0.375rem 1rem;
-    border-radius: 9999px;
-    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
-  }
-
-  :global(.dark) .premium-badge {
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-  }
-
-  .article-date {
-    font-size: 0.875rem;
-    color: #666;
-  }
-
-  :global(.dark) .article-date {
-    color: rgba(225, 225, 225, 0.6);
-  }
-
-  .article-title {
-    color: #22223B;
-    line-height: 1.2;
-  }
-
-  :global(.dark) .article-title {
-    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .article-description {
-    color: #555;
-    line-height: 1.6;
-  }
-
-  :global(.dark) .article-description {
-    color: rgba(225, 225, 225, 0.8);
-  }
-
-  .article-author {
-    font-size: 0.875rem;
-    color: #666;
-    font-weight: 500;
-  }
-
-  :global(.dark) .article-author {
-    color: rgba(225, 225, 225, 0.7);
-  }
-
-  .meta-separator {
-    color: #d1d5db;
-  }
-
-  :global(.dark) .meta-separator {
-    color: rgba(148, 0, 255, 0.4);
-  }
-
-  .article-tag {
-    background: rgba(148, 0, 255, 0.1);
-    color: #9400FF;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    border: 1px solid rgba(148, 0, 255, 0.2);
-    transition: all 0.3s ease;
-  }
-
-  .article-tag:hover {
-    background: rgba(148, 0, 255, 0.2);
-    border-color: rgba(148, 0, 255, 0.4);
-  }
-
-  :global(.dark) .article-tag {
-    background: rgba(0, 255, 255, 0.1);
-    color: #00FFFF;
-    border-color: rgba(0, 255, 255, 0.3);
-  }
-
-  :global(.dark) .article-tag:hover {
-    background: rgba(0, 255, 255, 0.2);
-    border-color: rgba(0, 255, 255, 0.5);
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-  }
-
-  /* Navegación */
+  /* ===== NAVIGATION ===== */
   .article-navigation {
-    border-top: 1px solid rgba(148, 0, 255, 0.1);
+    border-top: 1px solid #e5e7eb;
   }
 
   :global(.dark) .article-navigation {
-    border-top-color: rgba(148, 0, 255, 0.3);
+    border-top-color: rgba(255, 255, 255, 0.1);
   }
 
   .back-to-blog {
-    color: #9400FF;
-    font-weight: 600;
     display: inline-flex;
     align-items: center;
+    color: #9400FF;
+    font-weight: 600;
     transition: all 0.3s ease;
   }
 
@@ -291,267 +100,199 @@ const formattedDate = new Intl.DateTimeFormat('es-MX', {
     text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
   }
 
-  /* Mensaje de Bloqueo Premium */
-  .premium-lock {
-    background: rgba(148, 0, 255, 0.05);
-    border: 2px solid rgba(148, 0, 255, 0.2);
-    border-radius: 1rem;
-    padding: 3rem 2rem;
-    text-align: center;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+  /* ===== PROSE CUSTOMIZATION ===== */
+  .prose {
+    color: #374151;
   }
-
-  :global(.dark) .premium-lock {
-    background: rgba(148, 0, 255, 0.1);
-    border-color: rgba(0, 255, 255, 0.3);
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
-  }
-
-  .lock-icon {
-    width: 4rem;
-    height: 4rem;
-    color: #9400FF;
-  }
-
-  :global(.dark) .lock-icon {
-    color: #00FFFF;
-    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
-  }
-
-  .lock-title {
-    color: #22223B;
-  }
-
-  :global(.dark) .lock-title {
-    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .lock-message {
-    color: #555;
-    font-size: 1.125rem;
-  }
-
-  :global(.dark) .lock-message {
-    color: rgba(225, 225, 225, 0.8);
-  }
-
-  .lock-date {
-    color: #666;
-    font-size: 0.875rem;
-  }
-
-  :global(.dark) .lock-date {
-    color: rgba(225, 225, 225, 0.6);
-  }
-
-  .lock-btn {
-    background: linear-gradient(135deg, #9400FF 0%, #7000CC 100%);
-    color: white;
-    padding: 0.875rem 2rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    display: inline-block;
-  }
-
-  .lock-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(148, 0, 255, 0.4);
-  }
-
-  :global(.dark) .lock-btn {
-    background: linear-gradient(135deg, #00FFFF 0%, #00CCCC 100%);
-    color: #000;
-  }
-
-  :global(.dark) .lock-btn:hover {
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-  }
-
-  /* ===== ESTILOS DE TIPOGRAFÍA PARA CONTENIDO ===== */
-  /* Solo personalizamos colores y efectos visuales del tema */
-  /* Los espaciados y tipografía base los maneja @tailwindcss/typography */
 
   :global(.dark) .prose {
-    color: rgba(225, 225, 225, 0.9);
+    color: #E1E1E1;
   }
 
-  /* Headings - Solo colores del tema */
-  :global(.dark) .prose h1,
-  :global(.dark) .prose h2,
-  :global(.dark) .prose h3,
-  :global(.dark) .prose h4,
-  :global(.dark) .prose h5,
-  :global(.dark) .prose h6 {
+  /* Headings */
+  .prose :global(h1),
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4),
+  .prose :global(h5),
+  .prose :global(h6) {
+    color: #22223B;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  :global(.dark) .prose :global(h1),
+  :global(.dark) .prose :global(h2),
+  :global(.dark) .prose :global(h3),
+  :global(.dark) .prose :global(h4),
+  :global(.dark) .prose :global(h5),
+  :global(.dark) .prose :global(h6) {
     background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  :global(.dark) .prose h2 {
-    border-bottom-color: rgba(148, 0, 255, 0.3);
-  }
-
-  /* Enlaces - Colores y efectos del tema */
-  .prose a {
+  /* Links */
+  .prose :global(a) {
     color: #9400FF;
-    text-decoration-color: rgba(148, 0, 255, 0.3);
-    transition: all 0.3s ease;
+    text-decoration: underline;
+    transition: color 0.3s ease;
   }
 
-  .prose a:hover {
+  .prose :global(a:hover) {
     color: #7000CC;
-    text-decoration-color: #9400FF;
   }
 
-  :global(.dark) .prose a {
+  :global(.dark) .prose :global(a) {
     color: #00FFFF;
-    text-decoration-color: rgba(0, 255, 255, 0.3);
   }
 
-  :global(.dark) .prose a:hover {
+  :global(.dark) .prose :global(a:hover) {
     color: #00CCCC;
-    text-decoration-color: #00FFFF;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
   }
 
-  /* Listas - Solo colores de markers */
-  .prose ul > li::marker {
-    color: #9400FF;
+  /* Lists */
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-left: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 
-  :global(.dark) .prose ul > li::marker {
-    color: #00FFFF;
-  }
-
-  .prose ol > li::marker {
-    color: #9400FF;
-    font-weight: 600;
-  }
-
-  :global(.dark) .prose ol > li::marker {
-    color: #00FFFF;
-  }
-
-  /* Código inline - Colores y bordes del tema */
-  .prose code {
-    background-color: rgba(148, 0, 255, 0.1);
-    color: #9400FF;
-    border: 1px solid rgba(148, 0, 255, 0.2);
-  }
-
-  :global(.dark) .prose code {
-    background-color: rgba(0, 255, 255, 0.1);
-    color: #00FFFF;
-    border-color: rgba(0, 255, 255, 0.3);
-  }
-
-  /* Bloques de código - Colores y efectos del tema */
-  .prose pre {
-    background-color: #1a1a2e;
-    border: 2px solid rgba(148, 0, 255, 0.2);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  }
-
-  :global(.dark) .prose pre {
-    background-color: #0a0014;
-    border-color: rgba(0, 255, 255, 0.3);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
-  }
-
-  .prose pre code {
-    background-color: transparent;
-    border: none;
-  }
-
-  /* Strong - Colores del tema */
-  .prose strong {
-    color: #22223B;
-  }
-
-  :global(.dark) .prose strong {
-    color: #00FFFF;
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
-  }
-
-  /* Blockquotes - Colores y bordes del tema */
-  .prose blockquote {
-    border-left-color: #9400FF;
-    background-color: rgba(148, 0, 255, 0.05);
+  .prose :global(li) {
+    margin-bottom: 0.5rem;
     color: #555;
   }
 
-  :global(.dark) .prose blockquote {
-    border-left-color: #00FFFF;
-    background-color: rgba(0, 255, 255, 0.05);
+  :global(.dark) .prose :global(li) {
     color: rgba(225, 225, 225, 0.8);
   }
 
-  /* Tablas - Colores del tema */
-  .prose thead {
-    border-bottom-color: #9400FF;
+  .prose :global(ul > li)::marker {
+    color: #9400FF;
   }
 
-  :global(.dark) .prose thead {
-    border-bottom-color: #00FFFF;
-  }
-
-  .prose th {
-    color: #22223B;
-  }
-
-  :global(.dark) .prose th {
+  :global(.dark) .prose :global(ul > li)::marker {
     color: #00FFFF;
   }
 
-  .prose td {
-    border-bottom-color: rgba(148, 0, 255, 0.1);
+  /* Code blocks */
+  .prose :global(code) {
+    background: rgba(148, 0, 255, 0.1);
+    color: #9400FF;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
   }
 
-  :global(.dark) .prose td {
-    border-bottom-color: rgba(148, 0, 255, 0.2);
+  :global(.dark) .prose :global(code) {
+    background: rgba(0, 255, 255, 0.1);
+    color: #00FFFF;
   }
 
-  .prose tbody tr:hover {
-    background-color: rgba(148, 0, 255, 0.05);
+  .prose :global(pre) {
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
   }
 
-  :global(.dark) .prose tbody tr:hover {
-    background-color: rgba(0, 255, 255, 0.05);
+  :global(.dark) .prose :global(pre) {
+    background: #1a1a1a;
+    border-color: rgba(255, 255, 255, 0.1);
   }
 
-  /* Líneas horizontales - Gradientes del tema */
-  .prose hr {
+  .prose :global(pre code) {
+    background: transparent;
+    color: #374151;
+    padding: 0;
+  }
+
+  :global(.dark) .prose :global(pre code) {
+    color: #E1E1E1;
+  }
+
+  /* Blockquotes */
+  .prose :global(blockquote) {
+    border-left: 4px solid #9400FF;
+    padding-left: 1rem;
+    margin-left: 0;
+    font-style: italic;
+    color: #555;
+  }
+
+  :global(.dark) .prose :global(blockquote) {
+    border-left-color: #00FFFF;
+    color: rgba(225, 225, 225, 0.8);
+  }
+
+  /* Tables */
+  .prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
+
+  .prose :global(th),
+  .prose :global(td) {
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem;
+    text-align: left;
+  }
+
+  :global(.dark) .prose :global(th),
+  :global(.dark) .prose :global(td) {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .prose :global(th) {
+    background: rgba(148, 0, 255, 0.1);
+    font-weight: 600;
+  }
+
+  :global(.dark) .prose :global(th) {
+    background: rgba(0, 255, 255, 0.1);
+  }
+
+  /* Images */
+  .prose :global(img) {
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+  }
+
+  :global(.dark) .prose :global(img) {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Horizontal rules */
+  .prose :global(hr) {
     border: none;
+    height: 2px;
     background: linear-gradient(90deg, transparent, #9400FF, transparent);
+    margin: 2rem 0;
   }
 
-  :global(.dark) .prose hr {
+  :global(.dark) .prose :global(hr) {
     background: linear-gradient(90deg, transparent, #00FFFF, transparent);
   }
 
-  /* Imágenes - Bordes y sombras del tema */
-  .prose img {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  /* Paragraphs */
+  .prose :global(p) {
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
   }
 
-  :global(.dark) .prose img {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(148, 0, 255, 0.2);
+  /* Strong/Bold */
+  .prose :global(strong) {
+    color: #22223B;
+    font-weight: 600;
   }
 
-  /* Figcaption - Colores del tema */
-  .prose figcaption {
-    color: #666;
-  }
-
-  :global(.dark) .prose figcaption {
-    color: rgba(225, 225, 225, 0.6);
+  :global(.dark) .prose :global(strong) {
+    color: #00FFFF;
   }
 </style>

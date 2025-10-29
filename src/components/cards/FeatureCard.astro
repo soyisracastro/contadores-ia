@@ -1,0 +1,95 @@
+---
+interface Props {
+  icon: string; // SVG path data
+  title: string;
+  description: string;
+  class?: string;
+}
+
+const {
+  icon,
+  title,
+  description,
+  class: className = ''
+} = Astro.props;
+---
+
+<div class:list={['feature-card text-center p-8', className]}>
+  <div class="feature-icon-wrapper mx-auto mb-6">
+    <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={icon} />
+    </svg>
+  </div>
+  <h3 class="text-2xl font-semibold mb-3">{title}</h3>
+  <p class="feature-description">
+    {description}
+  </p>
+</div>
+
+<style>
+  .feature-card {
+    background: white;
+    border-radius: 1rem;
+    border: 2px solid rgba(148, 0, 255, 0.1);
+    transition: all 0.4s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(148, 0, 255, 0.4);
+    box-shadow: 0 20px 40px rgba(148, 0, 255, 0.2);
+  }
+
+  :global(.dark) .feature-card {
+    background: rgba(34, 34, 59, 0.3);
+    border-color: rgba(148, 0, 255, 0.3);
+  }
+
+  :global(.dark) .feature-card:hover {
+    border-color: rgba(0, 255, 255, 0.6);
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
+  }
+
+  .feature-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(148, 0, 255, 0.1) 0%, rgba(148, 0, 255, 0.2) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover .feature-icon-wrapper {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, rgba(148, 0, 255, 0.2) 0%, rgba(148, 0, 255, 0.3) 100%);
+  }
+
+  :global(.dark) .feature-icon-wrapper {
+    background: linear-gradient(135deg, rgba(148, 0, 255, 0.2) 0%, rgba(0, 255, 255, 0.2) 100%);
+  }
+
+  :global(.dark) .feature-card:hover .feature-icon-wrapper {
+    background: linear-gradient(135deg, rgba(148, 0, 255, 0.4) 0%, rgba(0, 255, 255, 0.4) 100%);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    color: #9400FF;
+  }
+
+  :global(.dark) .feature-icon {
+    color: #00FFFF;
+  }
+
+  .feature-description {
+    color: #555;
+  }
+
+  :global(.dark) .feature-description {
+    color: #E1E1E1;
+  }
+</style>

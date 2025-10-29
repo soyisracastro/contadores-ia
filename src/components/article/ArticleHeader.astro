@@ -1,0 +1,107 @@
+---
+import Badge from '../common/Badge.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  author: string;
+  tags: string[];
+  premium?: boolean;
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  pubDate,
+  author,
+  tags,
+  premium = false,
+  class: className = ''
+} = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('es-MX', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).format(pubDate);
+---
+
+<header class:list={['article-header mb-12', className]}>
+  <div class="flex items-center gap-3 mb-6">
+    {premium && (
+      <Badge variant="premium">
+        Contenido Premium
+      </Badge>
+    )}
+    <time class="article-date">{formattedDate}</time>
+  </div>
+
+  <h1 class="article-title text-4xl md:text-5xl font-bold mb-6">
+    {title}
+  </h1>
+
+  <p class="article-description text-xl mb-8">
+    {description}
+  </p>
+
+  <div class="article-meta flex items-center gap-3">
+    <span class="article-author">Por {author}</span>
+    <span class="meta-separator">•</span>
+    <div class="flex flex-wrap gap-2">
+      {tags.map((tag) => (
+        <Badge variant="tag">
+          {tag}
+        </Badge>
+      ))}
+    </div>
+  </div>
+</header>
+
+<style>
+  .article-date {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  :global(.dark) .article-date {
+    color: rgba(225, 225, 225, 0.6);
+  }
+
+  .article-title {
+    color: #22223B;
+  }
+
+  :global(.dark) .article-title {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .article-description {
+    color: #555;
+  }
+
+  :global(.dark) .article-description {
+    color: rgba(225, 225, 225, 0.8);
+  }
+
+  .article-author {
+    color: #666;
+    font-size: 0.875rem;
+  }
+
+  :global(.dark) .article-author {
+    color: rgba(225, 225, 225, 0.6);
+  }
+
+  .meta-separator {
+    color: #999;
+  }
+
+  :global(.dark) .meta-separator {
+    color: rgba(225, 225, 225, 0.4);
+  }
+</style>

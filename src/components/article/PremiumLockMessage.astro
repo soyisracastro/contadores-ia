@@ -1,0 +1,147 @@
+---
+import Button from '../common/Button.astro';
+
+interface AccessResult {
+  hasAccess: boolean;
+  reason?: 'not_authenticated' | 'no_membership' | 'expired' | 'cancelled';
+  membership?: {
+    end_date?: string;
+  };
+}
+
+interface Props {
+  accessResult: AccessResult;
+  class?: string;
+}
+
+const {
+  accessResult,
+  class: className = ''
+} = Astro.props;
+
+// Configurar el mensaje y botón según la razón del bloqueo
+let message: string;
+let buttonText: string;
+let buttonHref: string;
+let additionalInfo: string | null = null;
+
+switch (accessResult.reason) {
+  case 'not_authenticated':
+    message = 'Este artículo es exclusivo para miembros. Inicia sesión para acceder.';
+    buttonText = 'Iniciar Sesión';
+    buttonHref = '/login';
+    break;
+
+  case 'no_membership':
+    message = 'No tienes una membresía activa. Suscríbete para acceder a todo el contenido premium.';
+    buttonText = 'Ver Planes';
+    buttonHref = '/pricing';
+    break;
+
+  case 'expired':
+    message = 'Tu membresía ha expirado.';
+    buttonText = 'Renovar Membresía';
+    buttonHref = '/pricing';
+    if (accessResult.membership?.end_date) {
+      const endDate = new Date(accessResult.membership.end_date).toLocaleDateString('es-MX', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      additionalInfo = `Venció el ${endDate}`;
+    }
+    break;
+
+  case 'cancelled':
+    message = 'Tu membresía ha sido cancelada. Contacta a soporte si crees que esto es un error.';
+    buttonText = 'Ver Planes';
+    buttonHref = '/pricing';
+    break;
+
+  default:
+    message = 'Este contenido requiere una membresía activa.';
+    buttonText = 'Iniciar Sesión';
+    buttonHref = '/login';
+}
+---
+
+<div class:list={['premium-lock', className]}>
+  <svg class="lock-icon mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+  </svg>
+
+  <h2 class="lock-title text-2xl font-bold mb-3">
+    Contenido Premium
+  </h2>
+
+  <p class="lock-message mb-2">
+    {message}
+  </p>
+
+  {additionalInfo && (
+    <p class="lock-date mb-8">
+      {additionalInfo}
+    </p>
+  )}
+
+  <Button variant="primary" href={buttonHref} size="lg" class="lock-btn">
+    {buttonText}
+  </Button>
+</div>
+
+<style>
+  .premium-lock {
+    background: linear-gradient(135deg, rgba(148, 0, 255, 0.05) 0%, rgba(0, 102, 255, 0.05) 100%);
+    border: 2px solid rgba(148, 0, 255, 0.2);
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  :global(.dark) .premium-lock {
+    background: linear-gradient(135deg, rgba(148, 0, 255, 0.1) 0%, rgba(0, 255, 255, 0.1) 100%);
+    border-color: rgba(0, 255, 255, 0.3);
+  }
+
+  .lock-icon {
+    width: 4rem;
+    height: 4rem;
+    color: #9400FF;
+  }
+
+  :global(.dark) .lock-icon {
+    color: #00FFFF;
+  }
+
+  .lock-title {
+    color: #22223B;
+  }
+
+  :global(.dark) .lock-title {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .lock-message {
+    color: #555;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+
+  :global(.dark) .lock-message {
+    color: rgba(225, 225, 225, 0.8);
+  }
+
+  .lock-date {
+    color: #666;
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  :global(.dark) .lock-date {
+    color: rgba(225, 225, 225, 0.6);
+  }
+</style>

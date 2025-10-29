@@ -1,0 +1,407 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/common/Button.astro';
+import Badge from '../components/common/Badge.astro';
+import SectionHeader from '../components/common/SectionHeader.astro';
+import FeatureCard from '../components/cards/FeatureCard.astro';
+import BlogCard from '../components/cards/BlogCard.astro';
+import ArticleHeader from '../components/article/ArticleHeader.astro';
+import PremiumLockMessage from '../components/article/PremiumLockMessage.astro';
+
+// Datos de ejemplo para los componentes
+const samplePost = {
+  title: 'Cómo usar ChatGPT para contadores',
+  description: 'Aprende a usar ChatGPT para optimizar tu práctica contable y fiscal',
+  pubDate: new Date('2025-10-15'),
+  slug: 'sample-post',
+  tags: ['ia', 'chatgpt', 'contabilidad'],
+  premium: true
+};
+
+const sampleAccessResult = {
+  hasAccess: false,
+  reason: 'not_authenticated' as const
+};
+---
+
+<Layout
+  title="Guía de Estilos"
+  description="Documentación de componentes del sistema de diseño de Contadores IA"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h1 class="text-5xl font-bold mb-4 text-gray-900 dark:text-white">
+        Guía de Estilos
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300">
+        Documentación de componentes del sistema de diseño de Contadores IA
+      </p>
+    </div>
+
+    <!-- Navegación rápida -->
+    <nav class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-12">
+      <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Contenido</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div>
+          <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Componentes Comunes</h3>
+          <ul class="space-y-1 text-sm">
+            <li><a href="#buttons" class="text-blue-600 hover:underline">Botones</a></li>
+            <li><a href="#badges" class="text-blue-600 hover:underline">Badges</a></li>
+            <li><a href="#section-headers" class="text-blue-600 hover:underline">Section Headers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Tarjetas</h3>
+          <ul class="space-y-1 text-sm">
+            <li><a href="#feature-cards" class="text-blue-600 hover:underline">Feature Cards</a></li>
+            <li><a href="#blog-cards" class="text-blue-600 hover:underline">Blog Cards</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Artículos</h3>
+          <ul class="space-y-1 text-sm">
+            <li><a href="#article-header" class="text-blue-600 hover:underline">Article Header</a></li>
+            <li><a href="#premium-lock" class="text-blue-600 hover:underline">Premium Lock</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- SECTION: Botones -->
+    <section id="buttons" class="mb-16">
+      <SectionHeader
+        title="Botones"
+        icon="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <!-- Variantes -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Variantes</h3>
+          <div class="flex flex-wrap gap-4">
+            <Button variant="primary">Botón Primary</Button>
+            <Button variant="secondary">Botón Secondary</Button>
+            <Button variant="cta">Botón CTA</Button>
+            <Button variant="link">Botón Link</Button>
+          </div>
+        </div>
+
+        <!-- Tamaños -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Tamaños</h3>
+          <div class="flex flex-wrap items-center gap-4">
+            <Button variant="primary" size="sm">Small</Button>
+            <Button variant="primary" size="md">Medium</Button>
+            <Button variant="primary" size="lg">Large</Button>
+          </div>
+        </div>
+
+        <!-- Código de ejemplo -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<Button variant="primary" size="lg" href="/blog">
+  Explorar Contenido
+</Button>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Badges -->
+    <section id="badges" class="mb-16">
+      <SectionHeader
+        title="Badges"
+        icon="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <!-- Variantes -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Variantes</h3>
+          <div class="flex flex-wrap gap-4">
+            <Badge variant="premium">Premium</Badge>
+            <Badge variant="tag">Tag</Badge>
+            <Badge variant="status">Activo</Badge>
+            <Badge variant="info">Info</Badge>
+          </div>
+        </div>
+
+        <!-- Código de ejemplo -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<Badge variant="premium">Premium</Badge>
+<Badge variant="tag">ia</Badge>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Section Headers -->
+    <section id="section-headers" class="mb-16">
+      <SectionHeader
+        title="Section Headers"
+        icon="M4 6h16M4 12h16M4 18h16"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <!-- Tamaños -->
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Tamaños</h3>
+            <SectionHeader
+              title="Header Small"
+              icon="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+              size="sm"
+            />
+          </div>
+          <div>
+            <SectionHeader
+              title="Header Medium"
+              icon="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+              size="md"
+            />
+          </div>
+          <div>
+            <SectionHeader
+              title="Header Large"
+              icon="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+              size="lg"
+            />
+          </div>
+        </div>
+
+        <!-- Código de ejemplo -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<SectionHeader
+  title="Clases del Taller"
+  icon="M12 6.253v13m0-13C10.832 5.477..."
+  size="md"
+/>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Feature Cards -->
+    <section id="feature-cards" class="mb-16">
+      <SectionHeader
+        title="Feature Cards"
+        icon="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <div class="grid md:grid-cols-3 gap-6">
+          <FeatureCard
+            icon="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            title="Tutoriales Prácticos"
+            description="Aprende a usar herramientas de IA específicas para contadores"
+          />
+          <FeatureCard
+            icon="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            title="Casos Reales"
+            description="Descubre cómo otros profesionales están usando IA en su trabajo"
+          />
+          <FeatureCard
+            icon="M13 10V3L4 14h7v7l9-11h-7z"
+            title="Trucos y Tips"
+            description="Optimiza tu flujo de trabajo con trucos de IA"
+          />
+        </div>
+
+        <!-- Código de ejemplo -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<FeatureCard
+  icon="M9.75 17L9 20l-1 1h8..."
+  title="Tutoriales Prácticos"
+  description="Aprende a usar herramientas de IA..."
+/>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Blog Cards -->
+    <section id="blog-cards" class="mb-16">
+      <SectionHeader
+        title="Blog Cards"
+        icon="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <div class="grid md:grid-cols-3 gap-6">
+          <BlogCard
+            title={samplePost.title}
+            description={samplePost.description}
+            pubDate={samplePost.pubDate}
+            slug={samplePost.slug}
+            tags={samplePost.tags}
+            premium={samplePost.premium}
+          />
+          <BlogCard
+            title="Introducción a la IA"
+            description="Conceptos básicos de inteligencia artificial para contadores"
+            pubDate={new Date('2025-10-10')}
+            slug="intro-ia"
+            tags={['ia', 'basico']}
+            premium={false}
+          />
+          <BlogCard
+            title="Excel con IA"
+            description="Automatiza tus hojas de cálculo con inteligencia artificial"
+            pubDate={new Date('2025-10-20')}
+            slug="excel-ia"
+            tags={['excel', 'automatización']}
+            premium={true}
+          />
+        </div>
+
+        <!-- Código de ejemplo -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<BlogCard
+  title="Cómo usar ChatGPT para contadores"
+  description="Aprende a usar ChatGPT..."
+  pubDate={new Date('2025-10-15')}
+  slug="chatgpt-contadores"
+  tags={['ia', 'chatgpt', 'contabilidad']}
+  premium={true}
+/>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Article Header -->
+    <section id="article-header" class="mb-16">
+      <SectionHeader
+        title="Article Header"
+        icon="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <ArticleHeader
+          title={samplePost.title}
+          description={samplePost.description}
+          pubDate={samplePost.pubDate}
+          author="Contadores IA"
+          tags={samplePost.tags}
+          premium={samplePost.premium}
+        />
+
+        <!-- Código de ejemplo -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<ArticleHeader
+  title="Cómo usar ChatGPT para contadores"
+  description="Aprende a usar ChatGPT..."
+  pubDate={new Date('2025-10-15')}
+  author="Contadores IA"
+  tags={['ia', 'chatgpt', 'contabilidad']}
+  premium={true}
+/>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Premium Lock Message -->
+    <section id="premium-lock" class="mb-16">
+      <SectionHeader
+        title="Premium Lock Message"
+        icon="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 space-y-8">
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">No autenticado</h3>
+            <PremiumLockMessage
+              accessResult={{ hasAccess: false, reason: 'not_authenticated' }}
+            />
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Sin membresía</h3>
+            <PremiumLockMessage
+              accessResult={{ hasAccess: false, reason: 'no_membership' }}
+            />
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Membresía expirada</h3>
+            <PremiumLockMessage
+              accessResult={{
+                hasAccess: false,
+                reason: 'expired',
+                membership: { end_date: '2025-09-30' }
+              }}
+            />
+          </div>
+        </div>
+
+        <!-- Código de ejemplo -->
+        <div>
+          <h3 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">Código de ejemplo</h3>
+          <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm">{`<PremiumLockMessage
+  accessResult={{
+    hasAccess: false,
+    reason: 'not_authenticated'
+  }}
+/>`}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Estructura de componentes -->
+    <section class="mb-16">
+      <SectionHeader
+        title="Estructura de Componentes"
+        icon="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+        size="lg"
+      />
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+        <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded overflow-x-auto"><code class="text-sm text-gray-800 dark:text-gray-200">{`src/components/
+├── layout/
+│   ├── Header.astro
+│   └── Footer.astro
+├── sections/
+│   ├── HeroSection.astro
+│   ├── FeaturesSection.astro
+│   ├── PostsSection.astro
+│   └── CTASection.astro
+├── cards/
+│   ├── BlogCard.astro
+│   └── FeatureCard.astro
+├── article/
+│   ├── ArticleHeader.astro
+│   └── PremiumLockMessage.astro
+├── forms/
+│   └── (componentes de formularios)
+├── common/
+│   ├── Button.astro
+│   ├── Badge.astro
+│   └── SectionHeader.astro
+├── backgrounds/
+│   └── ParticleBackground.astro
+└── theme/
+    └── ThemeToggle.astro`}</code></pre>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  code {
+    font-family: 'Courier New', monospace;
+    white-space: pre;
+  }
+
+  pre {
+    max-width: 100%;
+  }
+</style>

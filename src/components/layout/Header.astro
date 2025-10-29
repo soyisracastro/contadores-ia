@@ -1,6 +1,6 @@
 ---
-import { getUser } from '../lib/auth';
-import ThemeToggle from './ThemeToggle.astro';
+import { getUser } from '../../lib/auth';
+import ThemeToggle from '../theme/ThemeToggle.astro';
 const user = await getUser(Astro.cookies);
 ---
 

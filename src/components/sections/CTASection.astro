@@ -1,0 +1,64 @@
+---
+import Button from '../common/Button.astro';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  buttonText: string;
+  buttonHref: string;
+  class?: string;
+}
+
+const {
+  title,
+  subtitle,
+  buttonText,
+  buttonHref,
+  class: className = ''
+} = Astro.props;
+---
+
+<section class:list={['cta-section py-20', className]}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-4xl font-bold mb-6">
+      {title}
+    </h2>
+    <p class="text-xl mb-10 cta-subtitle">
+      {subtitle}
+    </p>
+    <Button variant="cta" href={buttonHref} size="lg">
+      {buttonText}
+    </Button>
+  </div>
+</section>
+
+<style>
+  /* ===== CTA SECTION ===== */
+  .cta-section {
+    background: linear-gradient(135deg, #9400FF 0%, #0066FF 100%);
+    position: relative;
+  }
+
+  :global(.dark) .cta-section {
+    background: linear-gradient(135deg, #1a0033 0%, #000033 100%);
+  }
+
+  .cta-section h2 {
+    color: white;
+  }
+
+  :global(.dark) .cta-section h2 {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .cta-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  :global(.dark) .cta-subtitle {
+    color: rgba(0, 255, 255, 0.8);
+  }
+</style>

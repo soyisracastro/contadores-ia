@@ -1,7 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import BlogCard from '../components/BlogCard.astro';
-import ParticleBackground from '../components/ParticleBackground.astro';
+import HeroSection from '../components/sections/HeroSection.astro';
+import FeaturesSection from '../components/sections/FeaturesSection.astro';
+import PostsSection from '../components/sections/PostsSection.astro';
+import CTASection from '../components/sections/CTASection.astro';
 import { getCollection } from 'astro:content';
 
 // Obtener los posts más recientes
@@ -9,403 +11,58 @@ const allPosts = await getCollection('blog');
 const recentPosts = allPosts
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
   .slice(0, 3);
+
+// Datos para las secciones
+const heroButtons = [
+  { text: 'Explorar Contenido', href: '/blog', variant: 'primary' as const },
+  { text: 'Acceso Premium', href: '/login', variant: 'secondary' as const }
+];
+
+const features = [
+  {
+    icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+    title: 'Tutoriales Prácticos',
+    description: 'Aprende a usar herramientas de IA específicas para contadores'
+  },
+  {
+    icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+    title: 'Casos Reales',
+    description: 'Descubre cómo otros profesionales están usando IA en su trabajo'
+  },
+  {
+    icon: 'M13 10V3L4 14h7v7l9-11h-7z',
+    title: 'Trucos y Tips',
+    description: 'Optimiza tu flujo de trabajo con trucos de IA'
+  }
+];
 ---
 
 <Layout title="Inicio" description="Aprende a usar IA en contaduría pública en México">
-  <!-- Hero Section con Partículas -->
-  <section class="hero-section relative overflow-hidden py-32">
-    <!-- Particle Background -->
-    <ParticleBackground />
-
-    <!-- Hero Content -->
-    <div class="hero-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center">
-        <h1 class="hero-title text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
-          Contadores IA
-        </h1>
-        <p class="hero-subtitle text-xl md:text-2xl mb-10 animate-fade-in-delay">
-          Domina la Inteligencia Artificial para la Contaduría Pública en México
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-2">
-          <a href="/blog" class="btn-hero btn-primary">
-            Explorar Contenido
-          </a>
-          <a href="/login" class="btn-hero btn-secondary">
-            Acceso Premium
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Hero Section -->
+  <HeroSection
+    title="Contadores IA"
+    subtitle="Domina la Inteligencia Artificial para la Contaduría Pública en México"
+    buttons={heroButtons}
+  />
 
   <!-- Features Section -->
-  <section class="features-section py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="section-title text-4xl font-bold text-center mb-16">¿Qué Aprenderás?</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="feature-card text-center p-8">
-          <div class="feature-icon-wrapper mx-auto mb-6">
-            <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <h3 class="text-2xl font-semibold mb-3">Tutoriales Prácticos</h3>
-          <p class="feature-description">
-            Aprende a usar herramientas de IA específicas para contadores
-          </p>
-        </div>
-
-        <div class="feature-card text-center p-8">
-          <div class="feature-icon-wrapper mx-auto mb-6">
-            <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <h3 class="text-2xl font-semibold mb-3">Casos Reales</h3>
-          <p class="feature-description">
-            Descubre cómo otros profesionales están usando IA en su trabajo
-          </p>
-        </div>
-
-        <div class="feature-card text-center p-8">
-          <div class="feature-icon-wrapper mx-auto mb-6">
-            <svg class="feature-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-          </div>
-          <h3 class="text-2xl font-semibold mb-3">Trucos y Tips</h3>
-          <p class="feature-description">
-            Optimiza tu flujo de trabajo con trucos de IA
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <FeaturesSection
+    title="¿Qué Aprenderás?"
+    features={features}
+  />
 
   <!-- Recent Posts Section -->
-  <section class="posts-section py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center mb-12">
-        <h2 class="section-title text-4xl font-bold">Últimas Publicaciones</h2>
-        <a href="/blog" class="link-with-arrow">
-          Ver todas →
-        </a>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {recentPosts.map((post) => (
-          <BlogCard
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            slug={post.slug}
-            tags={post.data.tags}
-            premium={post.data.premium}
-          />
-        ))}
-      </div>
-    </div>
-  </section>
+  <PostsSection
+    title="Últimas Publicaciones"
+    posts={recentPosts}
+    viewAllHref="/blog"
+  />
 
   <!-- CTA Section -->
-  <section class="cta-section py-20">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-4xl font-bold mb-6">
-        ¿Listo para transformar tu práctica profesional?
-      </h2>
-      <p class="text-xl mb-10 cta-subtitle">
-        Únete y accede a contenido exclusivo para miembros premium
-      </p>
-      <a href="/login" class="btn-cta">
-        Crear Cuenta Premium
-      </a>
-    </div>
-  </section>
+  <CTASection
+    title="¿Listo para transformar tu práctica profesional?"
+    subtitle="Únete y accede a contenido exclusivo para miembros premium"
+    buttonText="Crear Cuenta Premium"
+    buttonHref="/login"
+  />
 </Layout>
-
-<style>
-  /* ===== HERO SECTION ===== */
-  .hero-section {
-    background: linear-gradient(135deg, #ffffff 0%, #f3f3f3 100%);
-    min-height: 600px;
-    position: relative;
-  }
-
-  :global(.dark) .hero-section {
-    background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #000000 100%);
-  }
-
-  .hero-title {
-    color: #22223B;
-    text-shadow: none;
-  }
-
-  :global(.dark) .hero-title {
-    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: none;
-    filter: drop-shadow(0 0 30px rgba(148, 0, 255, 0.6));
-  }
-
-  .hero-subtitle {
-    color: #555;
-  }
-
-  :global(.dark) .hero-subtitle {
-    color: rgba(225, 225, 225, 0.8);
-  }
-
-  /* Botones Hero */
-  .btn-hero {
-    padding: 1rem 2rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    font-size: 1.125rem;
-    transition: all 0.3s ease;
-    display: inline-block;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, #9400FF 0%, #7000CC 100%);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: linear-gradient(135deg, #7000CC 0%, #5000AA 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(148, 0, 255, 0.4);
-  }
-
-  .btn-secondary {
-    background: white;
-    color: #9400FF;
-    border: 2px solid #9400FF;
-  }
-
-  .btn-secondary:hover {
-    background: rgba(148, 0, 255, 0.1);
-    border-color: #7000CC;
-    color: #7000CC;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(148, 0, 255, 0.3);
-  }
-
-  :global(.dark) .btn-primary {
-    background: linear-gradient(135deg, #00FFFF 0%, #00CCCC 100%);
-    color: #000000;
-  }
-
-  :global(.dark) .btn-primary:hover {
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-  }
-
-  :global(.dark) .btn-secondary {
-    background: rgba(0, 255, 255, 0.1);
-    border-color: rgba(0, 255, 255, 0.5);
-    color: #00FFFF;
-  }
-
-  :global(.dark) .btn-secondary:hover {
-    background: rgba(0, 255, 255, 0.2);
-    border-color: #00FFFF;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
-  }
-
-  /* ===== ANIMACIONES ===== */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 0.8s ease-out;
-  }
-
-  .animate-fade-in-delay {
-    animation: fadeIn 0.8s ease-out 0.2s;
-    animation-fill-mode: backwards;
-  }
-
-  .animate-fade-in-delay-2 {
-    animation: fadeIn 0.8s ease-out 0.4s;
-    animation-fill-mode: backwards;
-  }
-
-  /* ===== FEATURES SECTION ===== */
-  .features-section {
-    background-color: #F3F3F3;
-  }
-
-  :global(.dark) .features-section {
-    background-color: #000000;
-  }
-
-  .section-title {
-    color: #22223B;
-  }
-
-  :global(.dark) .section-title {
-    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .feature-card {
-    background: white;
-    border-radius: 1rem;
-    border: 2px solid rgba(148, 0, 255, 0.1);
-    transition: all 0.4s ease;
-  }
-
-  .feature-card:hover {
-    transform: translateY(-10px);
-    border-color: rgba(148, 0, 255, 0.4);
-    box-shadow: 0 20px 40px rgba(148, 0, 255, 0.2);
-  }
-
-  :global(.dark) .feature-card {
-    background: rgba(34, 34, 59, 0.3);
-    border-color: rgba(148, 0, 255, 0.3);
-  }
-
-  :global(.dark) .feature-card:hover {
-    border-color: rgba(0, 255, 255, 0.6);
-    box-shadow: 0 0 40px rgba(0, 255, 255, 0.3);
-  }
-
-  .feature-icon-wrapper {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(148, 0, 255, 0.1) 0%, rgba(148, 0, 255, 0.2) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-  }
-
-  .feature-card:hover .feature-icon-wrapper {
-    transform: scale(1.1);
-    background: linear-gradient(135deg, rgba(148, 0, 255, 0.2) 0%, rgba(148, 0, 255, 0.3) 100%);
-  }
-
-  :global(.dark) .feature-icon-wrapper {
-    background: linear-gradient(135deg, rgba(148, 0, 255, 0.2) 0%, rgba(0, 255, 255, 0.2) 100%);
-  }
-
-  :global(.dark) .feature-card:hover .feature-icon-wrapper {
-    background: linear-gradient(135deg, rgba(148, 0, 255, 0.4) 0%, rgba(0, 255, 255, 0.4) 100%);
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-  }
-
-  .feature-icon {
-    width: 40px;
-    height: 40px;
-    color: #9400FF;
-  }
-
-  :global(.dark) .feature-icon {
-    color: #00FFFF;
-  }
-
-  .feature-description {
-    color: #555;
-  }
-
-  :global(.dark) .feature-description {
-    color: #E1E1E1;
-  }
-
-  /* ===== POSTS SECTION ===== */
-  .posts-section {
-    background-color: white;
-  }
-
-  :global(.dark) .posts-section {
-    background-color: #0a0a0a;
-  }
-
-  .link-with-arrow {
-    color: #9400FF;
-    font-weight: 600;
-    font-size: 1.125rem;
-    transition: all 0.3s ease;
-  }
-
-  .link-with-arrow:hover {
-    color: #7000CC;
-    transform: translateX(5px);
-  }
-
-  :global(.dark) .link-with-arrow {
-    color: #00FFFF;
-  }
-
-  :global(.dark) .link-with-arrow:hover {
-    color: #00CCCC;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-  }
-
-  /* ===== CTA SECTION ===== */
-  .cta-section {
-    background: linear-gradient(135deg, #9400FF 0%, #0066FF 100%);
-    position: relative;
-  }
-
-  :global(.dark) .cta-section {
-    background: linear-gradient(135deg, #1a0033 0%, #000033 100%);
-  }
-
-  .cta-section h2 {
-    color: white;
-  }
-
-  :global(.dark) .cta-section h2 {
-    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .cta-subtitle {
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  :global(.dark) .cta-subtitle {
-    color: rgba(0, 255, 255, 0.8);
-  }
-
-  .btn-cta {
-    background: white;
-    color: #9400FF;
-    padding: 1rem 2.5rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    font-size: 1.125rem;
-    transition: all 0.3s ease;
-    display: inline-block;
-  }
-
-  .btn-cta:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
-  }
-
-  :global(.dark) .btn-cta {
-    background: linear-gradient(135deg, #00FFFF 0%, #00CCCC 100%);
-    color: #000000;
-  }
-
-  :global(.dark) .btn-cta:hover {
-    box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
-  }
-</style>

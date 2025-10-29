@@ -1,0 +1,112 @@
+---
+import ParticleBackground from '../backgrounds/ParticleBackground.astro';
+import Button from '../common/Button.astro';
+
+interface ButtonConfig {
+  text: string;
+  href: string;
+  variant: 'primary' | 'secondary';
+}
+
+interface Props {
+  title: string;
+  subtitle: string;
+  buttons?: ButtonConfig[];
+  showParticles?: boolean;
+  class?: string;
+}
+
+const {
+  title,
+  subtitle,
+  buttons = [],
+  showParticles = true,
+  class: className = ''
+} = Astro.props;
+---
+
+<section class:list={['hero-section relative overflow-hidden py-32', className]}>
+  {showParticles && <ParticleBackground />}
+
+  <div class="hero-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h1 class="hero-title text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
+        {title}
+      </h1>
+      <p class="hero-subtitle text-xl md:text-2xl mb-10 animate-fade-in-delay">
+        {subtitle}
+      </p>
+      {buttons.length > 0 && (
+        <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-2">
+          {buttons.map((button) => (
+            <Button variant={button.variant} href={button.href} size="lg">
+              {button.text}
+            </Button>
+          ))}
+        </div>
+      )}
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ===== HERO SECTION ===== */
+  .hero-section {
+    background: linear-gradient(135deg, #ffffff 0%, #f3f3f3 100%);
+    min-height: 600px;
+    position: relative;
+  }
+
+  :global(.dark) .hero-section {
+    background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #000000 100%);
+  }
+
+  .hero-title {
+    color: #22223B;
+    text-shadow: none;
+  }
+
+  :global(.dark) .hero-title {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(148, 0, 255, 0.6));
+  }
+
+  .hero-subtitle {
+    color: #555;
+  }
+
+  :global(.dark) .hero-subtitle {
+    color: rgba(225, 225, 225, 0.8);
+  }
+
+  /* ===== ANIMACIONES ===== */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .animate-fade-in-delay {
+    animation: fadeIn 0.8s ease-out 0.2s;
+    animation-fill-mode: backwards;
+  }
+
+  .animate-fade-in-delay-2 {
+    animation: fadeIn 0.8s ease-out 0.4s;
+    animation-fill-mode: backwards;
+  }
+</style>

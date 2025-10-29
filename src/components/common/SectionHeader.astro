@@ -1,0 +1,89 @@
+---
+interface Props {
+  title: string;
+  icon?: string; // SVG path data
+  size?: 'sm' | 'md' | 'lg';
+  align?: 'left' | 'center';
+  class?: string;
+}
+
+const {
+  title,
+  icon,
+  size = 'md',
+  align = 'left',
+  class: className = ''
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'text-2xl',
+  md: 'text-3xl',
+  lg: 'text-4xl'
+};
+
+const iconSizes = {
+  sm: 'w-6 h-6',
+  md: 'w-8 h-8',
+  lg: 'w-10 h-10'
+};
+
+const alignClasses = {
+  left: 'justify-start',
+  center: 'justify-center'
+};
+---
+
+<div
+  class:list={[
+    'section-header flex items-center gap-3 mb-6',
+    alignClasses[align],
+    className
+  ]}
+>
+  {icon && (
+    <svg
+      class:list={['section-header-icon text-primary', iconSizes[size]]}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d={icon}
+      />
+    </svg>
+  )}
+  <slot name="icon" />
+  <h2
+    class:list={[
+      'section-header-title font-bold',
+      sizeClasses[size]
+    ]}
+  >
+    {title}
+  </h2>
+</div>
+
+<style>
+  .section-header-icon {
+    color: #9400FF;
+    flex-shrink: 0;
+  }
+
+  :global(.dark) .section-header-icon {
+    color: #00FFFF;
+  }
+
+  .section-header-title {
+    color: #22223B;
+  }
+
+  :global(.dark) .section-header-title {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>

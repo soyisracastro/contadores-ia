@@ -1,0 +1,153 @@
+---
+interface Props {
+  variant?: 'primary' | 'secondary' | 'cta' | 'link';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  href,
+  type = 'button',
+  size = 'md',
+  class: className = ''
+} = Astro.props;
+
+const Element = href ? 'a' : 'button';
+---
+
+<Element
+  class:list={[
+    'btn',
+    `btn-${variant}`,
+    `btn-${size}`,
+    className
+  ]}
+  href={href}
+  type={!href ? type : undefined}
+>
+  <slot />
+</Element>
+
+<style>
+  /* ===== BASE BUTTON STYLES ===== */
+  .btn {
+    display: inline-block;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+  }
+
+  /* ===== SIZE VARIANTS ===== */
+  .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-md {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .btn-lg {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+
+  /* ===== PRIMARY BUTTON ===== */
+  .btn-primary {
+    background: linear-gradient(135deg, #9400FF 0%, #7000CC 100%);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #7000CC 0%, #5000AA 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(148, 0, 255, 0.4);
+  }
+
+  :global(.dark) .btn-primary {
+    background: linear-gradient(135deg, #00FFFF 0%, #00CCCC 100%);
+    color: #000000;
+  }
+
+  :global(.dark) .btn-primary:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+  }
+
+  /* ===== SECONDARY BUTTON ===== */
+  .btn-secondary {
+    background: white;
+    color: #9400FF;
+    border: 2px solid #9400FF;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(148, 0, 255, 0.1);
+    border-color: #7000CC;
+    color: #7000CC;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(148, 0, 255, 0.3);
+  }
+
+  :global(.dark) .btn-secondary {
+    background: rgba(0, 255, 255, 0.1);
+    border-color: rgba(0, 255, 255, 0.5);
+    color: #00FFFF;
+  }
+
+  :global(.dark) .btn-secondary:hover {
+    background: rgba(0, 255, 255, 0.2);
+    border-color: #00FFFF;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+  }
+
+  /* ===== CTA BUTTON ===== */
+  .btn-cta {
+    background: white;
+    color: #9400FF;
+    padding: 1rem 2.5rem;
+  }
+
+  .btn-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+  }
+
+  :global(.dark) .btn-cta {
+    background: linear-gradient(135deg, #00FFFF 0%, #00CCCC 100%);
+    color: #000000;
+  }
+
+  :global(.dark) .btn-cta:hover {
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+  }
+
+  /* ===== LINK BUTTON ===== */
+  .btn-link {
+    background: transparent;
+    color: #9400FF;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .btn-link:hover {
+    background: rgba(148, 0, 255, 0.1);
+    transform: translateX(5px);
+  }
+
+  :global(.dark) .btn-link {
+    color: #00FFFF;
+  }
+
+  :global(.dark) .btn-link:hover {
+    background: rgba(0, 255, 255, 0.1);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+</style>

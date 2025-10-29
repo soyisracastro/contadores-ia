@@ -1,0 +1,99 @@
+---
+import BlogCard from '../cards/BlogCard.astro';
+
+interface Post {
+  slug: string;
+  data: {
+    title: string;
+    description: string;
+    pubDate: Date;
+    tags: string[];
+    premium: boolean;
+  };
+}
+
+interface Props {
+  title?: string;
+  posts: Post[];
+  viewAllHref?: string;
+  viewAllText?: string;
+  class?: string;
+}
+
+const {
+  title = 'Últimas Publicaciones',
+  posts,
+  viewAllHref,
+  viewAllText = 'Ver todas →',
+  class: className = ''
+} = Astro.props;
+---
+
+<section class:list={['posts-section py-20', className]}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center mb-12">
+      <h2 class="section-title text-4xl font-bold">{title}</h2>
+      {viewAllHref && (
+        <a href={viewAllHref} class="link-with-arrow">
+          {viewAllText}
+        </a>
+      )}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {posts.map((post) => (
+        <BlogCard
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          slug={post.slug}
+          tags={post.data.tags}
+          premium={post.data.premium}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ===== POSTS SECTION ===== */
+  .posts-section {
+    background-color: white;
+  }
+
+  :global(.dark) .posts-section {
+    background-color: #0a0a0a;
+  }
+
+  .section-title {
+    color: #22223B;
+  }
+
+  :global(.dark) .section-title {
+    background: linear-gradient(135deg, #9400FF 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .link-with-arrow {
+    color: #9400FF;
+    font-weight: 600;
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
+  }
+
+  .link-with-arrow:hover {
+    color: #7000CC;
+    transform: translateX(5px);
+  }
+
+  :global(.dark) .link-with-arrow {
+    color: #00FFFF;
+  }
+
+  :global(.dark) .link-with-arrow:hover {
+    color: #00CCCC;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
+</style>
