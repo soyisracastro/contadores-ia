@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SubscriptionHero from '../components/course/SubscriptionHero.astro';
+import VideoGrid from '../components/course/VideoGrid.astro';
+
+const videos = [
+  {
+    id: 'dQw4w9WgXcQ',
+    title: 'Introducción a la Programación para Contadores',
+    description: 'Descubre por qué todo contador necesita entender programación básica en 2024.',
+    duration: '15:30',
+    publishedAt: '2024-10-15',
+    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+    episode: 1
+  },
+  {
+    id: 'dQw4w9WgXcQ',
+    title: 'Variables y Tipos de Datos en Python',
+    description: 'Aprende los conceptos fundamentales: números, textos y variables.',
+    duration: '18:45',
+    publishedAt: '2024-10-16',
+    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+    episode: 2
+  },
+  {
+    id: 'dQw4w9WgXcQ',
+    title: 'Automatización de Cálculos Fiscales',
+    description: 'Crea scripts para automatizar cálculos del SAT y declaraciones.',
+    duration: '22:15',
+    publishedAt: '2024-10-17',
+    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+    episode: 3
+  },
+  {
+    id: 'dQw4w9WgXcQ',
+    title: 'Trabajando con Excel desde Python',
+    description: 'Conecta Python con Excel para automatizar reportes contables.',
+    duration: '25:12',
+    publishedAt: '2024-10-18',
+    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+    episode: 4
+  },
+  {
+    id: 'dQw4w9WgXcQ',
+    title: 'APIs del SAT: Consulta CFDIs Automáticamente',
+    description: 'Aprende a conectarte a las APIs oficiales del SAT para descargar CFDIs.',
+    duration: '19:30',
+    publishedAt: '2024-10-19',
+    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+    episode: 5
+  },
+  {
+    id: 'dQw4w9WgXcQ',
+    title: 'Análisis de Datos Contables con Pandas',
+    description: 'Usa librerías profesionales para analizar grandes volúmenes de datos fiscales.',
+    duration: '28:40',
+    publishedAt: '2024-10-20',
+    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+    episode: 6
+  }
+];
+---
+
+<Layout title="Curso de Programación para Contadores" description="Aprende programación básica aplicada a la contaduría pública. Recibe un video diario y domina Python para automatizar tus procesos fiscales.">
+  <SubscriptionHero />
+  <VideoGrid videos={videos} />
+</Layout>

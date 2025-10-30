@@ -1,0 +1,195 @@
+---
+interface Video {
+  id: string;
+  title: string;
+  description: string;
+  duration: string;
+  publishedAt: string;
+  thumbnail: string;
+  episode: number;
+}
+
+interface Props {
+  videos: Video[];
+}
+
+const { videos } = Astro.props;
+
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('es-MX', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
+---
+
+<section class="py-16 bg-gray-50 dark:bg-gray-900">
+  <div class="container mx-auto px-4">
+    <!-- Título de la sección -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+        Contenido del Curso
+      </h2>
+      <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        Videos prácticos diseñados específicamente para contadores públicos.
+        Cada video incluye ejemplos reales del mundo fiscal mexicano.
+      </p>
+    </div>
+
+    <!-- Grid de Videos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+      {videos.map((video) => (
+        <article class="video-card group">
+          <!-- Thumbnail Container -->
+          <div class="relative overflow-hidden rounded-lg mb-4 aspect-video bg-gray-200 dark:bg-gray-700">
+            <!-- Episode Badge -->
+            <div class="absolute top-3 left-3 z-10">
+              <span class="episode-badge">
+                Ep. {video.episode}
+              </span>
+            </div>
+
+            <!-- Duration Badge -->
+            <div class="absolute bottom-3 right-3 z-10">
+              <span class="duration-badge">
+                {video.duration}
+              </span>
+            </div>
+
+            <!-- Thumbnail Image -->
+            <img
+              src={video.thumbnail}
+              alt={video.title}
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
+            >
+
+            <!-- Play Overlay -->
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+              <div class="play-button opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="12" fill="rgba(255,255,255,0.9)"/>
+                  <path d="M10 8L16 12L10 16V8Z" fill="#ef4444"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Click Target -->
+            <a
+              href={`https://youtube.com/watch?v=${video.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="absolute inset-0 z-20"
+              aria-label={`Ver video: ${video.title}`}
+            ></a>
+          </div>
+
+          <!-- Video Info -->
+          <div class="space-y-3">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-purple-600 dark:group-hover:text-cyan-400 transition-colors duration-300">
+              <a
+                href={`https://youtube.com/watch?v=${video.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:underline"
+              >
+                {video.title}
+              </a>
+            </h3>
+
+            <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+              {video.description}
+            </p>
+
+            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+              <time datetime={video.publishedAt}>
+                📅 {formatDate(video.publishedAt)}
+              </time>
+              <span>
+                🕒 {video.duration}
+              </span>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- CTA Bottom -->
+    <div class="text-center mt-16">
+      <div class="inline-block p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          ¿Quieres seguir aprendiendo?
+        </h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">
+          Suscríbete para recibir contenido nuevo directamente en tu email
+        </p>
+        <a
+          href="#subscription-form"
+          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105"
+        >
+          📧 Suscribirme al curso
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .video-card {
+    background: white;
+    border-radius: 12px;
+    padding: 0;
+    transition: all 0.3s ease;
+    border: 1px solid rgb(229, 231, 235);
+    overflow: hidden;
+  }
+
+  .video-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  :global(.dark) .video-card {
+    background: rgb(31, 41, 55);
+    border-color: rgb(75, 85, 99);
+  }
+
+  :global(.dark) .video-card:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .episode-badge {
+    background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+  }
+
+  :global(.dark) .episode-badge {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  }
+
+  .duration-badge {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+  }
+
+  .play-button {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  }
+
+  /* Agregar padding a las cards */
+  .video-card > div:last-child {
+    padding: 1.5rem;
+  }
+</style>

@@ -1,0 +1,139 @@
+---
+// No hay props específicos para este componente
+---
+
+<section class="hero-bg relative overflow-hidden py-20">
+  <!-- Background Effects -->
+  <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-cyan-500/10 dark:from-purple-500/20 dark:to-cyan-500/20"></div>
+  <div class="absolute top-20 left-20 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+  <div class="absolute bottom-20 right-20 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-4xl mx-auto text-center">
+      <!-- Badge -->
+      <div class="inline-flex items-center px-4 py-2 bg-purple-500/20 dark:bg-cyan-500/20 rounded-full text-purple-700 dark:text-cyan-300 text-sm font-medium mb-6 backdrop-blur-sm">
+        🎯 Curso Especializado para Contadores
+      </div>
+
+      <!-- Título Principal -->
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-cyan-500 dark:from-purple-400 dark:to-cyan-300 bg-clip-text text-transparent">
+        Programación Básica
+        <span class="block">para Contadores</span>
+      </h1>
+
+      <!-- Subtítulo -->
+      <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+        Domina Python y automatiza tus procesos fiscales.
+        <strong class="text-purple-600 dark:text-cyan-400">Recibe un video diario</strong>
+        y aprende a tu ritmo sin abrumarte.
+      </p>
+
+      <!-- Stats -->
+      <div class="flex justify-center gap-8 mb-10">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-600 dark:text-cyan-400">25+</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Videos</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-600 dark:text-cyan-400">6h+</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Contenido</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-600 dark:text-cyan-400">100%</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Práctico</div>
+        </div>
+      </div>
+
+      <!-- CTA de Suscripción -->
+      <div class="max-w-md mx-auto">
+        <form id="subscription-form" class="space-y-4">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              id="email"
+              placeholder="tu-email@contador.com"
+              required
+              class="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm focus:ring-2 focus:ring-purple-500 dark:focus:ring-cyan-400 focus:border-transparent outline-none text-gray-900 dark:text-gray-100"
+            >
+            <button
+              type="submit"
+              class="subscription-btn px-8 py-3 bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl dark:shadow-cyan-500/25"
+            >
+              📧 Suscribirme
+            </button>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            ✅ Un video diario en tu email • ✅ Sin spam • ✅ Cancela cuando quieras
+          </p>
+        </form>
+
+        <!-- Mensaje de éxito (oculto por defecto) -->
+        <div id="success-message" class="hidden mt-4 p-4 bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-600 rounded-lg">
+          <p class="text-green-700 dark:text-green-300 font-medium">
+            🎉 ¡Perfecto! Recibirás tu primer video mañana.
+          </p>
+        </div>
+      </div>
+
+      <!-- Testimonial rápido -->
+      <div class="mt-12 max-w-2xl mx-auto">
+        <blockquote class="text-lg italic text-gray-600 dark:text-gray-300 mb-4">
+          "En 3 semanas automaticé la descarga de CFDIs. Ahora ahorro 5 horas semanales."
+        </blockquote>
+        <cite class="text-purple-600 dark:text-cyan-400 font-medium">— María González, CP</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('subscription-form');
+    const successMessage = document.getElementById('success-message');
+
+    if (form && successMessage) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email = (document.getElementById('email') as HTMLInputElement)?.value;
+
+        if (email) {
+          // Aquí iría la integración real con tu servicio de email
+          // Por ahora solo simulamos el éxito
+
+          form.style.display = 'none';
+          successMessage.classList.remove('hidden');
+
+          // Opcional: enviar a un webhook o API
+          console.log('Email suscrito:', email);
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .hero-bg {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+
+  :global(.dark) .hero-bg {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
+
+  .subscription-btn {
+    box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+  }
+
+  :global(.dark) .subscription-btn {
+    box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
+  }
+
+  .subscription-btn:hover {
+    box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
+  }
+
+  :global(.dark) .subscription-btn:hover {
+    box-shadow: 0 15px 30px rgba(6, 182, 212, 0.4);
+  }
+</style>
